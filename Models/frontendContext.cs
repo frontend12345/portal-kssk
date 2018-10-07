@@ -19,12 +19,12 @@ namespace Portal.Models
         public virtual DbSet<Files> Files { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<User> User { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+				//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Initial Catalog=frontend;User ID=frontend;Password=P@ssw0rd");
 				//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 			
