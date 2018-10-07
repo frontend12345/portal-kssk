@@ -25,7 +25,11 @@ namespace Portal.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Initial Catalog=frontend;User ID=frontend;Password=P@ssw0rd");
+                //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Initial Catalog=frontend;User ID=frontend;Password=P@ssw0rd");
+				//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+			
+				optionsBuilder.UseSqlite("Data Source=frontend.db");
+        
             }
         }
 
@@ -46,7 +50,7 @@ namespace Portal.Models
                     .IsRequired()
                     .HasDefaultValueSql("('true')");
 
-                entity.Property(e => e.Title)
+                entity.Property(e => e.Url)
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -67,6 +71,10 @@ namespace Portal.Models
                 entity.Property(e => e.Filename)
                     .IsRequired()
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(5000)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Content)
@@ -99,7 +107,13 @@ namespace Portal.Models
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("('/CMS/List')");
+                    .HasDefaultValueSql("('home')");
+					
+                entity.Property(e => e.Mode)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('single')");
             });
 
             modelBuilder.Entity<User>(entity =>

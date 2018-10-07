@@ -17,6 +17,7 @@ namespace Portal.Models
         public bool? IsActive { get; set; }
         public int Order { get; set; }
         public string Url { get; set; }
+        public string Mode { get; set; }
         public DateTime CreatedDate { get; set; }
         public int CreatedBy { get; set; }
 
