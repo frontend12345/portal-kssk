@@ -43,8 +43,8 @@ namespace Portal.Controllers
         }
 		
 		// PUT: api/Menu/5
-		[HttpPut]
-        public async Task<IActionResult> PutMenu(int id, Menu menu)
+		[HttpPut("{id}")]
+        public async Task<IActionResult> PutMenu([FromRoute] int id, [FromBody] Menu menu)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace Portal.Controllers
 		
         // POST: api/Menu
 		[HttpPost]
-        public async Task<IActionResult> PostMenu(Menu menu)
+        public async Task<IActionResult> PostMenu([FromBody] Menu menu)
         {
             if (!ModelState.IsValid)
             {
@@ -88,8 +88,8 @@ namespace Portal.Controllers
         }
 
         // DELETE: api/Menu/5
-		[HttpDelete]
-        public async Task<IActionResult> DeleteMenu(int id)
+		[HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMenu([FromRoute] int id)
         {
             var menu = context.Menu.Where(a=>a.Id==id);
             if (menu == null)

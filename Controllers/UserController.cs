@@ -37,8 +37,8 @@ namespace Portal.Controllers
         }
 		
 		// PUT: api/User/5
-		[HttpPut]
-        public async Task<IActionResult> PutUser(int id, User user)
+		[HttpPut("{id}")]
+        public async Task<IActionResult> PutUser([FromRoute] int id,[FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace Portal.Controllers
 		
         // POST: api/User
 		[HttpPost]
-        public async Task<IActionResult> PostUser(User user)
+        public async Task<IActionResult> PostUser([FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -80,8 +80,8 @@ namespace Portal.Controllers
         }
 
         // DELETE: api/User/5
-		[HttpDelete]
-        public async Task<IActionResult> DeleteUser(int id)
+		[HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             var user = context.User.Where(a=>a.Id==id);
             if (user == null)

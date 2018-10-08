@@ -53,8 +53,8 @@ namespace Portal.Controllers
         }
 		
 		// PUT: api/Content/5
-		[HttpPut]
-        public async Task<IActionResult> PutContent(int id, Content content)
+		[HttpPut("{id}")]
+        public async Task<IActionResult> PutContent([FromRoute] int id,[FromBody] Content content)
         {
             if (!ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace Portal.Controllers
 		
         // POST: api/Content
 		[HttpPost]
-        public async Task<IActionResult> PostContent(Content content)
+        public async Task<IActionResult> PostContent([FromBody] Content content)
         {
             if (!ModelState.IsValid)
             {
@@ -98,8 +98,8 @@ namespace Portal.Controllers
         }
 
         // DELETE: api/Content/5
-		[HttpDelete]
-        public async Task<IActionResult> DeleteContent(int id)
+		[HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteContent([FromRoute] int id)
         {
             var content = context.Content.Where(a=>a.Id==id);
             if (content == null)

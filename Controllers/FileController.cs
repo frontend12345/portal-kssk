@@ -41,8 +41,8 @@ namespace Portal.Controllers
         }
 		
 		// PUT: api/Files/5
-		[HttpPut]
-        public async Task<IActionResult> PutFiles(int id, Files files)
+		[HttpPut("{id}")]
+        public async Task<IActionResult> PutFiles([FromRoute] int id,[FromBody] Files files)
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +70,7 @@ namespace Portal.Controllers
 		
         // POST: api/Files
 		[HttpPost]
-        public async Task<IActionResult> PostFiles(Files files)
+        public async Task<IActionResult> PostFiles([FromBody] Files files)
         {
             if (!ModelState.IsValid)
             {
@@ -86,8 +86,8 @@ namespace Portal.Controllers
         }
 
         // DELETE: api/Files/5
-		[HttpDelete]
-        public async Task<IActionResult> DeleteFiles(int id)
+		[HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteFiles([FromRoute] int id)
         {
             var files = context.Files.Where(a=>a.Id==id);
             if (files == null)
