@@ -13,4 +13,8 @@ export class UserService {
   logout() {
     return this.http.get<any[]>("/api/User/logout");
   };
+  
+  login(username:string,password:string) {
+    return this.http.get<any[]>("/api/User/logout");
+  };
 }

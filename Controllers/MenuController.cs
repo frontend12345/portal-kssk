@@ -86,6 +86,25 @@ namespace Portal.Controllers
 
             return Ok(menu);
         }
+		
+        // POST: api/Menu
+		[HttpPost("list")]
+        public async Task<IActionResult> PostMenu([FromBody] List<Menu> menu)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+			foreach(var mn in menu){
+				mn.CreatedBy = 1;
+				mn.CreatedDate = DateTime.Now;
+				context.Menu.Add(mn);
+			}
+            await context.SaveChangesAsync();
+
+            return Ok(menu);
+        }
 
         // DELETE: api/Menu/5
 		[HttpDelete("{id}")]

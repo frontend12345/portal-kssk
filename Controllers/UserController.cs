@@ -78,6 +78,23 @@ namespace Portal.Controllers
 
             return Ok(user);
         }
+		
+        // POST: api/User
+		[HttpPost("list")]
+        public async Task<IActionResult> PostUserList([FromBody] List<User> user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+			
+			foreach(var us in user){
+				context.User.Add(us);
+			}
+            await context.SaveChangesAsync();
+
+            return Ok(user);
+        }
 
         // DELETE: api/User/5
 		[HttpDelete("{id}")]

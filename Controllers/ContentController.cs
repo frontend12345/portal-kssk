@@ -96,6 +96,25 @@ namespace Portal.Controllers
 
             return Ok(content);
         }
+		
+        // POST: api/Content
+		[HttpPost("list")]
+        public async Task<IActionResult> PostContentList([FromBody] List<Content> content)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+			foreach(var con in content){
+				con.CreatedBy = 1;
+				con.CreatedDate = DateTime.Now;
+				context.Content.Add(con);
+			}
+            await context.SaveChangesAsync();
+
+            return Ok(content);
+        }
 
         // DELETE: api/Content/5
 		[HttpDelete("{id}")]

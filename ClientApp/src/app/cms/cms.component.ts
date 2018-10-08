@@ -134,4 +134,12 @@ export class CmsComponent implements OnInit {
 			this.isAuthenticated = result;
 		});
 	};
+	
+	login(){
+		if(this.loginForm.value.username!==null && this.loginForm.value.password!==null){
+			this.userService.login(this.loginForm.value.username,this.loginForm.value.password).subscribe(result => {					
+				this.isAuthenticated = result;
+			});
+		}
+	};
 }

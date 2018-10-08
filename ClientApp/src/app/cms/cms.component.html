@@ -141,14 +141,14 @@
 					<div class="col-lg-8 posts-list">
 						<div class="comment-form">
 							<h4>Masuk ke dalam sistem kami</h4>
-							<form>
+							<form [formGroup]="loginForm" (ngSubmit)="login()">
 								<div class="form-group">
-									<input type="text" class="form-control" id="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+									<input type="text" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
 								</div>
 								<div class="form-group">
-									<input type="password" class="form-control" id="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+									<input type="password" class="form-control" formControlName="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
 								</div>
-								<a href="#" class="primary-btn text-uppercase">Masuk</a>	
+								<a href="#" (click)="login()" class="primary-btn text-uppercase">Masuk</a>	
 							</form>
 						</div>
 					</div>

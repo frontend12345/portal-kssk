@@ -84,6 +84,25 @@ namespace Portal.Controllers
 
             return Ok(files);
         }
+		
+        // POST: api/Files
+		[HttpPost("list")]
+        public async Task<IActionResult> PostFiles([FromBody] List<Files> files)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+			foreach(var fl in files){
+				fl.CreatedBy = 1;
+				fl.CreatedDate = DateTime.Now;
+				context.Files.Add(fl);
+			}
+            await context.SaveChangesAsync();
+
+            return Ok(files);
+        }
 
         // DELETE: api/Files/5
 		[HttpDelete("{id}")]
