@@ -44,5 +44,82 @@ namespace Portal.Controllers
 			}
 			return Ok(result);
         }
+		
+		// GET: api/Content
+		[HttpGet]
+        public IQueryable<Content> GetContent()
+        {
+            return context.Content;
+        }
+		
+		// PUT: api/Content/5
+		[HttpPut]
+        public async Task<IActionResult> PutContent(int id, Content content)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != content.Id)
+            {
+                return BadRequest();
+            }
+
+            context.Content.Update(content);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(content);
+        }
+		
+        // POST: api/Content
+		[HttpPost]
+        public async Task<IActionResult> PostContent(Content content)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            content.CreatedBy = 1;
+            content.CreatedDate = DateTime.Now;
+            context.Content.Add(content);
+            await context.SaveChangesAsync();
+
+            return Ok(content);
+        }
+
+        // DELETE: api/Content/5
+		[HttpDelete]
+        public async Task<IActionResult> DeleteContent(int id)
+        {
+            var content = context.Content.Where(a=>a.Id==id);
+            if (content == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                foreach (var con in content)
+                {
+                    context.Content.Remove(con);
+                }
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(content);
+        }
     }
 }

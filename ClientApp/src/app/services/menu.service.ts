@@ -7,6 +7,6 @@ export class MenuService {
   constructor(public http: HttpClient) { }
 
   getMenu() {
-    return this.http.get<any[]>("/api/Menu");
+    return this.http.get<any[]>("/api/Menu/navigation");
   }
 }

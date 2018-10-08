@@ -15,8 +15,8 @@ namespace Portal.Controllers
 			context = new frontendContext();
 		}
 
-        [HttpGet]		
-        public IActionResult GetMenu()
+        [HttpGet("navigation")]		
+        public IActionResult GetNavigation()
         {
 			dynamic result;
 			try{
@@ -33,6 +33,83 @@ namespace Portal.Controllers
 				return BadRequest(ex.Message);
 			}
 			return Ok(result);
+        }
+		
+		// GET: api/Menu
+		[HttpGet]
+        public IQueryable<Menu> GetMenu()
+        {
+            return context.Menu;
+        }
+		
+		// PUT: api/Menu/5
+		[HttpPut]
+        public async Task<IActionResult> PutMenu(int id, Menu menu)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != menu.Id)
+            {
+                return BadRequest();
+            }
+
+            context.Menu.Update(menu);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(menu);
+        }
+		
+        // POST: api/Menu
+		[HttpPost]
+        public async Task<IActionResult> PostMenu(Menu menu)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            menu.CreatedBy = 1;
+            menu.CreatedDate = DateTime.Now;
+            context.Menu.Add(menu);
+            await context.SaveChangesAsync();
+
+            return Ok(menu);
+        }
+
+        // DELETE: api/Menu/5
+		[HttpDelete]
+        public async Task<IActionResult> DeleteMenu(int id)
+        {
+            var menu = context.Menu.Where(a=>a.Id==id);
+            if (menu == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                foreach (var mn in menu)
+                {
+                    context.Menu.Remove(mn);
+                }
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(menu);
         }
     }
 }

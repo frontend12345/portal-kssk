@@ -32,5 +32,82 @@ namespace Portal.Controllers
 			}
 			return Ok(result);
         }
+
+		// GET: api/Files
+		[HttpGet]
+        public IQueryable<Files> GetFiles()
+        {
+            return context.Files;
+        }
+		
+		// PUT: api/Files/5
+		[HttpPut]
+        public async Task<IActionResult> PutFiles(int id, Files files)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != files.Id)
+            {
+                return BadRequest();
+            }
+
+            context.Files.Update(files);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(files);
+        }
+		
+        // POST: api/Files
+		[HttpPost]
+        public async Task<IActionResult> PostFiles(Files files)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            files.CreatedBy = 1;
+            files.CreatedDate = DateTime.Now;
+            context.Files.Add(files);
+            await context.SaveChangesAsync();
+
+            return Ok(files);
+        }
+
+        // DELETE: api/Files/5
+		[HttpDelete]
+        public async Task<IActionResult> DeleteFiles(int id)
+        {
+            var files = context.Files.Where(a=>a.Id==id);
+            if (files == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                foreach (var file in files)
+                {
+                    context.Files.Remove(file);
+                }
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(files);
+        }
     }
 }
