@@ -1,169 +1,329 @@
 <header id="header" id="header">
-		<div class="header-top">
+	<div class="header-top">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-sm-6 col-8 header-top-left no-padding">
+					<ul>
+						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="#"><i class="fa fa-instagram"></i></a></li>
+					</ul>			
+				</div> 
+				<div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
+					<a href="tel:+62 21 350 3504"><span class="lnr lnr-phone-handset"></span> <span class="text"> (021) 350 3504</span></a>
+					<a href="mailto:sekretariat@kssk.go.id"><span class="lnr lnr-envelope"></span> <span class="text">sekretariatkssk@kssk.go.id</span></a>			
+				</div>
+			</div>			  					
+		</div>
+	</div>
+	<div class="container main-menu">
+		<div class="row align-items-center justify-content-between d-flex">
+			<div id="logo">
+				<a href="index.html"><img src="assets/img/logo.png" alt="" title="" /></a>
+			</div>
+			<nav id="nav-menu-container">
+				<ul class="nav-menu">
+					<ng-container *ngFor="let itemRoot of menu">
+					<li *ngIf="!hasChildren(menu,itemRoot.id)" id="bs-check-menu">
+						<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
+					</li>
+					<li *ngIf="hasChildren(menu,itemRoot.id)" class="menu-has-children" id="bs-check-menu">
+						<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
+						<ul *ngIf="hasChildren(menu,itemRoot.id)">
+							<li *ngFor="let itemChild of menu">
+							<a *ngIf="itemChild.parentId===itemRoot.id" href="#" (click)="open(itemChild)">{{itemChild.title}}</a>
+							</li>
+						</ul>
+					</li>
+					</ng-container>
+					<li *ngIf="isAuthenticated" class="menu-has-children" >
+						<a href="#" class="sf-with-ul">Menu User</a>
+						<ul>
+							<li>
+								<a href="#" (click)="openAdmin()">Profil</a>
+							</li>
+							<li>
+								<a href="#" (click)="openDownload()">Download</a>
+							</li>
+							<li>
+								<a href="#" (click)="logout()">Logout</a>
+							</li>
+						</ul>
+					</li>
+					<li *ngIf="!isAuthenticated">
+						<a href="#" (click)="openLogin()">Login</a>
+					</li>
+				</ul>
+			</nav><!-- #nav-menu-container -->			    		
+		</div>
+	</div>
+</header><!-- #header -->
+<div *ngIf="!showDownload && !showLogin && selectedMenu.mode!='full'">
+	<section class="banner-area relative about-banner" id="home">	
+		<div class="overlay overlay-bg"></div>
+		<div class="container">				
+			<div class="row d-flex align-items-center justify-content-center">
+				<div class="about-content col-lg-12">
+					<h1 class="text-white">
+						{{selectedMenu.title}}		
+					</h1>
+				</div>	
+			</div>
+		</div>
+	</section>
+	<div *ngIf="selectedMenu.mode=='single'" [innerHTML]="contentText | safeHtml"></div>		
+	<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile'">				
+		<!-- Start event-details Area -->
+		<section class="event-details-area section-gap">
 			<div class="container">
 				<div class="row">
-					<div class="col-lg-6 col-sm-6 col-8 header-top-left no-padding">
-						<ul>
-							<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-							<li><a href="#"><i class="fa fa-instagram"></i></a></li>
-						</ul>			
-					</div> 
-					<div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
-						<a href="tel:+62 21 350 3504"><span class="lnr lnr-phone-handset"></span> <span class="text"> (021) 350 3504</span></a>
-						<a href="mailto:sekretariat@kssk.go.id"><span class="lnr lnr-envelope"></span> <span class="text">sekretariatkssk@kemenkeu.go.id</span></a>			
-					</div>
-				</div>			  					
-			</div>
-		</div>
-		<div class="container main-menu">
-			<div class="row align-items-center justify-content-between d-flex">
-				<div id="logo">
-					<a href="index.html"><img src="assets/img/logo.png" alt="" title="" /></a>
-				</div>
-				<nav id="nav-menu-container">
-					<ul class="nav-menu">
-						<li *ngFor="let itemRoot of menu">
-							<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
-							<ul *ngIf="hasChildren(menu,itemRoot.id)">
-								<li *ngFor="let itemChild of menu">
-								<a *ngIf="itemChild.parentId===itemRoot.id" href="#" (click)="open(itemChild)">{{itemChild.title}}</a>
-								</li>
-							</ul>
-						</li>
-						<li>
-							<a *ngIf="!isAuthenticated" href="#" (click)="openLogin()">Login</a>
-							<a *ngIf="isAuthenticated" href="#" (click)="logout()">Logout</a>
-							<ul *ngIf="isAuthenticated">
-								<li>
-								<a href="#" (click)="openDownload()">Download</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</nav><!-- #nav-menu-container -->			    		
-			</div>
-		</div>
-	</header><!-- #header -->
-	<div *ngIf="!showLogin && selectedMenu.mode!='full'">
-		<section class="banner-area relative about-banner" id="home">	
-			<div class="overlay overlay-bg"></div>
-			<div class="container">				
-				<div class="row d-flex align-items-center justify-content-center">
-					<div class="about-content col-lg-12">
-						<h1 class="text-white">
-							{{selectedMenu.title}}		
-						</h1>
-					</div>	
-				</div>
-			</div>
-		</section>
-		<div *ngIf="selectedMenu.mode=='single'" [innerHTML]="contentText | safeHtml"></div>		
-		<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile'">				
-			<!-- Start event-details Area -->
-			<section class="event-details-area section-gap">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-8 event-details-left">
-						
-							<div class="menu-content pb-70 col-lg-12">
-								<div class="title text-center">
-									<h1>{{currentContent?.content}}</h1>
-								</div>
+					<div class="col-lg-8 event-details-left">
+					
+						<div class="menu-content pb-70 col-lg-12">
+							<div class="title text-center">
+								<h1>{{currentContent?.content}}</h1>
 							</div>
-							<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">
-								<div class="single-carusel row align-items-center" *ngFor="let file of listFile">
-									<div class="col-12 col-md-12 thumb">
-										<img class="img-fluid" src="assets/foto/{{file.filename}}" alt="">
+						</div>
+						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">
+							<div class="single-carusel row align-items-center" *ngFor="let file of listFile">
+								<div class="col-12 col-md-12 thumb">
+									<img class="img-fluid" src="assets/foto/{{file.filename}}" alt="">
+								</div>
+								<div class="detials col-12 col-md-6">
+									<div [innerHTML]="file.description | safeHtml"></div>
+								</div>
+							</div>																				
+						</div>
+						<div *ngIf="selectedMenu.mode=='multiplefile'" class="menu-content pb-70 col-lg-12">
+							<div class="pb-30" *ngFor="let file of listFile">
+								<div class="single-carusel row align-items-center">
+									<div class="col-12 col-md-6 thumb">
+										<img class="img-fluid" src="assets/img/pdf-logo.png" alt="">
 									</div>
 									<div class="detials col-12 col-md-6">
 										<div [innerHTML]="file.description | safeHtml"></div>
-									</div>
-								</div>																				
-							</div>
-							<div *ngIf="selectedMenu.mode=='multiplefile'" class="menu-content pb-70 col-lg-12">
-								<div class="pb-30" *ngFor="let file of listFile">
-									<div class="single-carusel row align-items-center">
-										<div class="col-12 col-md-6 thumb">
-											<img class="img-fluid" src="assets/img/pdf-logo.png" alt="">
-										</div>
-										<div class="detials col-12 col-md-6">
-											<div [innerHTML]="file.description | safeHtml"></div>
-											<span class="lnr lnr-download">
-												<a href="assets/file/{{file.filename}}"> Download</a>
-											</span>
-										</div>
+										<span class="lnr lnr-download">
+											<a href="assets/file/{{file.filename}}"> Download</a>
+										</span>
 									</div>
 								</div>
 							</div>
-							
-							<div *ngIf="listContent.length>0" class="social-nav row no-gutters">
-								<div class="col-lg-12 col-md-12 navs">
-									<a href="#" *ngIf="hasPrevContent()"  (click)="prevContent()" class="nav-prev"><span class="lnr lnr-arrow-left"></span>Sebelumnya</a>
-									<a href="#" *ngIf="hasNextContent()"  (click)="nextContent()" class="nav-next">Selanjutnya<span class="lnr lnr-arrow-right"></span></a>									
-								</div>
+						</div>
+						
+						<div *ngIf="listContent.length>0" class="social-nav row no-gutters">
+							<div class="col-lg-12 col-md-12 navs">
+								<a href="#" *ngIf="hasPrevContent()"  (click)="prevContent()" class="nav-prev"><span class="lnr lnr-arrow-left"></span>Sebelumnya</a>
+								<a href="#" *ngIf="hasNextContent()"  (click)="nextContent()" class="nav-next">Selanjutnya<span class="lnr lnr-arrow-right"></span></a>									
 							</div>
 						</div>
-						<div class="col-lg-4 event-details-right">
-							<div class="single-event-details">
-								<h4>Daftar {{selectedMenu.title}}</h4>
-								<ul class="mt-10" *ngFor="let content of listContent;let i = index">
-									<li class="justify-content-between d-flex">
-										<a href="#" (click)="openContent(i)"><span>{{content.content}}</span></a>
-									</li>														
-								</ul>
-							</div>													
-						</div>
 					</div>
-				</div>	
-			</section>
-			<!-- End event-details Area -->	
-		</div>
-	</div>
-	<div *ngIf="!showLogin && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
-	<div *ngIf="showLogin">
-		<section class="banner-area relative about-banner" id="home">	
-			<div class="overlay overlay-bg"></div>
-			<div class="container">				
-				<div class="row d-flex align-items-center justify-content-center">
-					<div class="about-content col-lg-12">
-						<h1 class="text-white">
-							Login Aplikasi		
-						</h1>
-					</div>	
-				</div>
-			</div>
-		</section>
-		<!-- Start post-content Area -->
-		<section class="post-content-area single-post-area">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-8 posts-list">
-						<div class="comment-form">
-							<h4>Masuk ke dalam sistem kami</h4>
-							<form [formGroup]="loginForm" (ngSubmit)="login()">
-								<div class="form-group">
-									<input type="text" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
-								</div>
-								<div class="form-group">
-									<input type="password" class="form-control" formControlName="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
-								</div>
-								<a href="#" (click)="login()" class="primary-btn text-uppercase">Masuk</a>	
-							</form>
-						</div>
-					</div>
-					<div class="col-lg-4 sidebar-widgets">
-						<div class="widget-wrap">
-							<div class="single-sidebar-widget newsletter-widget">
-								<h4 class="newsletter-title">Informasi</h4>
-								<p>
-									Akses data menggunakan username dan password yang telah terdaftar sebelumnya.
-								</p>								
-							</div>
-						</div>
+					<div class="col-lg-4 event-details-right">
+						<div class="single-event-details">
+							<h4>Daftar {{selectedMenu.title}}</h4>
+							<ul class="mt-10" *ngFor="let content of listContent;let i = index">
+								<li class="justify-content-between d-flex">
+									<a href="#" (click)="openContent(i)"><span>{{content.content}}</span></a>
+								</li>														
+							</ul>
+						</div>													
 					</div>
 				</div>
 			</div>	
 		</section>
-		<!-- End post-content Area -->	
+		<!-- End event-details Area -->	
 	</div>
+</div>
+<div *ngIf="!showDownload && !showLogin && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
+<div *ngIf="showLogin">
+	<section class="banner-area relative about-banner" id="home">	
+		<div class="overlay overlay-bg"></div>
+		<div class="container">				
+			<div class="row d-flex align-items-center justify-content-center">
+				<div class="about-content col-lg-12">
+					<h1 class="text-white">
+						Login Aplikasi		
+					</h1>
+				</div>	
+			</div>
+		</div>
+	</section>
+	<!-- Start post-content Area -->
+	<section class="post-content-area single-post-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 posts-list">
+					<div class="comment-form">
+						<h4>Masuk ke dalam sistem kami</h4>
+						<form [formGroup]="loginForm" (ngSubmit)="login()">
+							<div class="form-group">
+								<input type="text" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" formControlName="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+							</div>
+							<a href="#" (click)="login()" class="primary-btn text-uppercase">Masuk</a>	
+						</form>
+					</div>
+				</div>
+				<div class="col-lg-4 sidebar-widgets">
+					<div class="widget-wrap">
+						<div class="single-sidebar-widget newsletter-widget">
+							<h4 class="newsletter-title">Informasi</h4>
+							<p>
+								Akses data menggunakan username dan password yang telah terdaftar sebelumnya.
+							</p>								
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+	<!-- End post-content Area -->	
+</div>	
+<div *ngIf="showDownload || showAdmin">
+	<section class="banner-area relative about-banner" id="home">	
+		<div class="overlay overlay-bg"></div>
+		<div class="container">				
+			<div class="row d-flex align-items-center justify-content-center">
+				<div class="about-content col-lg-12">
+					<h1 *ngIf="showDownload" class="text-white">
+						Download Dokumen Penting	
+					</h1>
+					<h1 *ngIf="showAdmin" class="text-white">
+						Profil
+					</h1>
+				</div>	
+			</div>
+		</div>
+	</section>
+	<!-- Start event-details Area -->
+	<section class="event-details-area section-gap">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 event-details-left">				
+					<div class="menu-content pb-70 col-lg-12">
+						<div *ngIf="showDownload" class="title text-center">
+							<h1>Daftar dokumen penting</h1>
+						</div>
+						<div *ngIf="showAdmin" class="title text-center">
+							<h1>Selamat Datang, {{userLogin.username}}</h1>
+						</div>
+					</div>
+					<div class="menu-content pb-70 col-lg-12">
+						<ng-container *ngIf="showDownload">
+						<div class="pb-30" *ngFor="let file of listSecureFile">
+							<div class="single-carusel row align-items-center">
+								<div class="col-12 col-md-6 thumb">
+									<img class="img-fluid" src="assets/img/secure-logo.png" alt="">
+								</div>
+								<div class="detials col-12 col-md-6">
+									<div [innerHTML]="file.description | safeHtml"></div>
+									<form [formGroup]="secureDownloadForm" (ngSubmit)="secureDownload(file.Filename)">
+										<div class="form-group">
+											<input type="text" class="form-control" formControlName="secretKey" placeholder="Secret Key" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Secret Key'">
+										</div>
+										<a href="#" (click)="secureDownload(file.Filename)" class="primary-btn">Download</a>	
+									</form>
+								</div>
+							</div>
+						</div>
+						</ng-container>
+						<div *ngIf="showAdmin">
+							Berikut ini adalah QR spesifik untuk Anda. Silakan gunakan Authenticator untuk generate kode digital Anda.<br />
+							<img [src]="qrCode" height="200">
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 event-details-right">
+					<div class="widget-wrap">
+						<div class="single-sidebar-widget newsletter-widget">
+							<h4 class="newsletter-title">Informasi</h4>
+							<p>
+								Gunakan Authenticator (klik link berikut) <a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style="width:135px;height:40px;"/></a> <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg) no-repeat;width:135px;height:40px;"></a> untuk mendapatkan kode saat akan mengakses aplikasi.
+							</p>								
+						</div>
+					</div>												
+				</div>
+			</div>
+		</div>	
+	</section>
+	<!-- End event-details Area -->	
+</div>				    			
+<!-- start footer Area -->		
+<footer class="footer-area section-gap">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-md-6 col-sm-6">
+				<div class="single-footer-widget">
+					<h4>Kontak Kami</h4>
+					<font color="white">
+					<ul>
+						<li>Sekretariat: Gedung Djuanda II Lantai 18 <br />
+						Jalan Dr. Wahidin Nomor 1, Jakarta 10710 <br />
+						Telepon: (021) 350 3504 | Faksimili: (021) 350 3506 | Email: sekretariatkssk@kemenkeu.go.id</li>
+					</ul>	
+					</font>
+				</div>
+			</div>
+			<div class="col-lg-1 col-md-6 col-sm-6">
+				<div class="single-footer-widget">								
+				</div>
+			</div>
+			<div class="col-lg-2 col-md-6 col-sm-6">
+				<div class="single-footer-widget">								
+				</div>
+			</div>																		
+			<div class="col-lg-2  col-md-6 col-sm-6">
+				<div class="single-footer-widget">
+				</div>
+			</div>											
+		</div>
+		<div class="footer-bottom row align-items-center justify-content-between">
+			<p class="footer-text m-0 col-lg-8 col-md-12"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+			<font color="white">
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></font></p>
+			<div class="col-lg-4 col-sm-12 footer-social">
+				<a href="#"><i class="fa fa-facebook"></i></a>
+				<a href="#"><i class="fa fa-twitter"></i></a>
+				<a href="#"><i class="fa fa-instagram"></i></a>
+			</div>
+		</div>						
+	</div>
+</footer>	
+<!-- End footer Area -->
+
+<nav id="mobile-nav">
+	<ul style="touch-action: pan-y;" >
+		<ng-container *ngFor="let itemRoot of menu">
+		<li *ngIf="!hasChildren(menu,itemRoot.id)" id="bs-check-menu">
+			<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
+		</li>
+		<li *ngIf="hasChildren(menu,itemRoot.id)" class="menu-has-children" id="bs-check-menu"> 
+			<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
+			<ul *ngIf="hasChildren(menu,itemRoot.id)" style="display: none;">
+				<li *ngFor="let itemChild of menu">
+				<a *ngIf="itemChild.parentId===itemRoot.id" href="#" (click)="open(itemChild)">{{itemChild.title}}</a>
+				</li>
+			</ul>
+		</li>
+		</ng-container>
+		<li *ngIf="isAuthenticated" class="menu-has-children" >
+			<a href="#" class="sf-with-ul">Menu User</a>
+			<ul>
+				<li>
+					<a href="#" (click)="openAdmin()">Profil</a>
+				</li>
+				<li>
+					<a href="#" (click)="openDownload()">Download</a>
+				</li>
+				<li>
+					<a href="#" (click)="logout()">Logout</a>
+				</li>
+			</ul>
+		</li>
+		<li *ngIf="!isAuthenticated">
+			<a href="#" (click)="openLogin()">Login</a>
+		</li>
+	</ul>
+</nav>

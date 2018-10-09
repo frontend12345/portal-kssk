@@ -17,6 +17,7 @@ namespace Portal.Models
 
         public virtual DbSet<Content> Content { get; set; }
         public virtual DbSet<Files> Files { get; set; }
+        public virtual DbSet<SecureFiles> SecureFiles { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<User> User { get; set; }
 		
@@ -82,6 +83,22 @@ namespace Portal.Models
                     .HasForeignKey(d => d.ContentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Files_ContentId");
+            });
+
+            modelBuilder.Entity<Files>(entity =>
+            {
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Filename)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Menu>(entity =>

@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;  
 using Portal.Models;
+using AspNetCore.Totp;
 
 namespace Portal.Controllers
 {
@@ -17,38 +20,62 @@ namespace Portal.Controllers
     public class UserController : Controller
     {
 		private frontendContext context;
-		public UserController(){
-			context = new frontendContext();
+        private IConfiguration _configuration { get; set; }
+		private readonly TotpSetupGenerator totpSetupGenerator;
+		
+		public UserController(frontendContext con, IConfiguration configuration){
+			context = con;
+			_configuration = configuration;
+			totpSetupGenerator = new TotpSetupGenerator();
 		}
- 
-        [HttpGet("check")]		
-        public IActionResult CheckUser()
+		
+        [HttpGet("qrcode")]	
+		[Authorize]
+        public IActionResult GetQRCode()
         {
-			return Ok(false);
+			var username = User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value;
+			var password = User.Claims.FirstOrDefault(x => x.Type.Equals("Password")).Value;
+			var totpSetup = this.totpSetupGenerator.Generate("Portal KSSK", username, password);
+            return Ok(totpSetup.QrCodeImage);
         }
 		
-        [HttpGet("logout")]		
-        public IActionResult Logout()
-        {
-			return Ok(false);
-        }
+		public string ComputeSha256Hash(string rawData)  
+        {  
+            // Create a SHA256   
+            using (SHA256 sha256Hash = SHA256.Create())  
+            {  
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));  
+  
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();  
+                for (int i = 0; i < bytes.Length; i++)  
+                {  
+                    builder.Append(bytes[i].ToString("x2"));  
+                }  
+                return builder.ToString();  
+            }  
+        } 
 		
 		[HttpPost("login")]
         public IActionResult Authenticate([FromBody]User userLogin)
         {
-            var user = context.User.SingleOrDefault(x => ((x.Username == userLogin.Username) && (x.Password == userLogin.Password)));
+			var sha256Pass = this.ComputeSha256Hash(userLogin.Password);
+            var user = context.User.SingleOrDefault(x => ((x.Username == userLogin.Username) && (x.Password == sha256Pass.ToUpper())));
 
             if (user == null)
-                return Ok(false);
+                return NotFound();
 
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Hahahaha Bagooos!!");
+            var key = Encoding.ASCII.GetBytes(_configuration["ConnectionStrings:SecretKey"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.Username.ToString()),
+                    new Claim("Password", user.Password.ToString()),
+                    new Claim("Role", user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -58,7 +85,7 @@ namespace Portal.Controllers
 
             // remove password before returning
             user.Password = null;
-            return Ok(true);
+            return Ok(user);
         }
 
 		// GET: api/User

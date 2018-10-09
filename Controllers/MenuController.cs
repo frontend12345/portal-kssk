@@ -60,6 +60,15 @@ namespace Portal.Controllers
 				}
 				await context.SaveChangesAsync();
 			}
+			var resSecureFile = context.SecureFiles.ToList();
+			if(resSecureFile.Count==0){
+				string myJsonString = "[{'id':1,'filename':'KEP KSSK 04 2016 Kode Etik KSSK.pdf','description':'<p>30 November 2016</p>','order':4,'createdDate':'2018-10-09T08:58:46','createdBy':1},{'id':2,'filename':'KEP KSSK 03 2016 POS Pertukaran Data dan Informasi.pdf','description':'<p>30 November 2016</p>','order':5,'createdDate':'2018-10-09T08:58:46','createdBy':1}]";
+				List<SecureFiles> secFiles =  JsonConvert.DeserializeObject<List<SecureFiles>>(myJsonString);
+				foreach(var secFile in secFiles){
+					context.SecureFiles.Add(secFile);
+				}
+				await context.SaveChangesAsync();
+			}
 			return Ok();
 		}
 
