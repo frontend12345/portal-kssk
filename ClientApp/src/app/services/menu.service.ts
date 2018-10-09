@@ -8,5 +8,9 @@ export class MenuService {
 
   getMenu() {
     return this.http.get<any[]>("/api/Menu/navigation");
-  }
+  };
+  
+  getLoadData() {
+    return this.http.get<any[]>("/api/Menu/loadData");
+  };
 }

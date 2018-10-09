@@ -23,6 +23,7 @@ export class CmsComponent implements OnInit {
 	currentContentIndex: number;
 	listContent: any[] = [];
 	listFile: any[] = [];
+	
 	selectedMenu: any = JSON.parse('{"id":1,"parentId":null,"title":"Beranda","isActive":true,"order":0,"url":"home","mode":"full"}');
 	constructor(
 		private route: Router,
@@ -36,8 +37,8 @@ export class CmsComponent implements OnInit {
 	};
 
 	ngOnInit() {
+		this.loadData();
 		this.loadMenu();
-		this.loadContent();	
 		this.isGuest();
 		this.showLogin = false;
         this.loginForm = this.formBuilder.group({
@@ -46,9 +47,15 @@ export class CmsComponent implements OnInit {
         });
 	};
 
+	loadData() {
+		this.menuService.getLoadData().subscribe(result => {
+		});	
+	};
+
 	loadMenu() {
 		this.menuService.getMenu().subscribe(result => {
 			this.menu = result;
+			this.loadContent();	
 		});	
 	};
 	
