@@ -23,7 +23,7 @@ export class UserService {
 	let headers: HttpHeaders = this.setHeaders();
 	headers = headers.append('Content-Type', 'application/json');
 	headers = headers.append('Accept', 'application/json')
-    return this.http.post<any[]>("/api/User/login", userLogin, {headers})
+    return this.http.post("/api/User/login", userLogin, {headers})
 	.pipe(
       catchError(this.handleError)
     );
@@ -31,7 +31,7 @@ export class UserService {
   
   getQRCode() { 
 	let headers: HttpHeaders = this.setHeaders();
-    return this.http.get<string>("/api/User/qrcode", { headers: headers, responseType: 'text' });
+    return this.http.get("/api/User/qrcode", { headers: headers, responseType: 'text' });
   };
   
   handleError(error: HttpErrorResponse) {

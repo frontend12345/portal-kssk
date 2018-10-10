@@ -31,6 +31,6 @@ export class FileService {
   getSecureFile(filename: string, secretKey: string) { 
 	let headers: HttpHeaders = this.setHeaders();
 	let secureFile: string = "{'filename':'"+filename+"'}";
-    return this.http.post<any>("/api/SecureFile/download/"+secretKey, secureFile, { headers: headers, responseType: 'blob' });
+    return this.http.post("/api/SecureFile/download/"+secretKey, secureFile, { headers: headers, responseType: 'blob' });
   };
 }
