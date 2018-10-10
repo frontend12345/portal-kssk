@@ -10,6 +10,7 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using AspNetCore.Totp.Interface;
 using AspNetCore.Totp;
+using System.Text.RegularExpressions;
 
 namespace Portal.Controllers
 {
@@ -24,6 +25,14 @@ namespace Portal.Controllers
 			context = con;
             totpGenerator = new TotpGenerator();
             totpValidator = new TotpValidator(this.totpGenerator);
+		}
+		
+		public string GetApplicationRoot()
+		{
+			var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+			Regex appPathMatcher=new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
+			var appRoot = appPathMatcher.Match(exePath).Value;
+			return appRoot;
 		}
 
 		// GET: api/SecureFiles
@@ -50,10 +59,16 @@ namespace Portal.Controllers
 					if (filename == null)
 						return Content("filename not present");
 
-					var pathDir = Path.Combine(
-								Directory.GetCurrentDirectory(), "Secure");
-					var pathDirFile = Path.Combine(pathDir,
-								filename);
+					var pathDir = Path.Combine(Directory.GetCurrentDirectory(), "Secure");
+					var pathDirFile = Path.Combine(pathDir, filename);
+					if(!System.IO.File.Exists(pathDirFile)){
+						pathDir = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).ToString(), "Secure");
+						pathDirFile = Path.Combine(pathDir,filename);
+					}
+					if(!System.IO.File.Exists(pathDirFile)){
+						pathDir = Path.Combine(GetApplicationRoot(), "Secure");
+						pathDirFile = Path.Combine(pathDir,filename);
+					}
 
 					var memory = new MemoryStream();
 					using (var stream = new FileStream(pathDirFile, FileMode.Open))
