@@ -53,7 +53,7 @@ namespace Portal.Controllers
 			}
 			var resUser = context.User.ToList();
 			if(resUser.Count==0){
-				string myJsonString = "[{'id':1,'username':'brandon.stark@gmail.com','password':'FDB7D5C701A3B4A9981E98FD486D22B51B51F2E91605540E57081D440573C009','role':'Admin','authenticator':'123'}]";
+				string myJsonString = "[{'id':1,'username':'brandon.stark@gmail.com','password':'2EA90BF81C8CF1AFC73DA38E917C728614E90EB6031F3D1D8DB002A91D26EB32','role':'Admin','authenticator':'123'},{'id':2,'username':'1','password':'6B86B273FF34FCE19D6B804EFF5A3F5747ADA4EAA22F1D49C01E52DDB7875B4B','role':'Admin','authenticator':'123'},{'id':3,'username':'kssk@kssk.go.id','password':'5A654027471B387BDC86E7B2902D62FB0389FF8C1C7180486F4C3447F9E8A263','role':'Admin','authenticator':'123'}]";
 				List<User> user =  JsonConvert.DeserializeObject<List<User>>(myJsonString);
 				foreach(var us in user){
 					context.User.Add(us);

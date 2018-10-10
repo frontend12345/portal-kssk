@@ -222,7 +222,7 @@
 										<div class="form-group">
 											<input type="text" class="form-control" formControlName="secretKey" placeholder="Secret Key" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Secret Key'">
 										</div>
-										<a href="#" (click)="secureDownload(file.Filename)" class="primary-btn">Download</a>	
+										<a href="#" (click)="secureDownload(file.filename)" class="primary-btn">Download</a>	
 									</form>
 								</div>
 							</div>
@@ -230,6 +230,8 @@
 						</ng-container>
 						<div *ngIf="showAdmin">
 							Berikut ini adalah QR spesifik untuk Anda. Silakan gunakan Authenticator untuk generate kode digital Anda.<br />
+							<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" style="display:inline-block;overflow:hidden;background:url(https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Get_it_on_Google_play.svg/136px-Get_it_on_Google_play.svg.png) no-repeat;width:135px;height:40px;"></a> atau 
+							<a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg) no-repeat;width:135px;height:40px;"></a><br />
 							<img [src]="qrCode" height="200">
 						</div>
 					</div>
@@ -237,9 +239,18 @@
 				<div class="col-lg-4 event-details-right">
 					<div class="widget-wrap">
 						<div class="single-sidebar-widget newsletter-widget">
-							<h4 class="newsletter-title">Informasi</h4>
+							<h4 class="newsletter-title">Administrasi</h4>
 							<p>
-								Gunakan Authenticator (klik link berikut) <a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' style="width:135px;height:40px;"/></a> <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg) no-repeat;width:135px;height:40px;"></a> untuk mendapatkan kode saat akan mengakses aplikasi.
+								<a href="#" (click)="openAdminMenu()">Menu</a>
+							</p>
+							<p>
+								<a href="#" (click)="openAdminContent()">Content</a>
+							</p>
+							<p>
+								<a href="#" (click)="openAdminDokumen()">Dokumen</a>
+							</p>
+							<p>
+								<a href="#" (click)="openAdminSecureDokumen()">Secure Dokumen</a>
 							</p>								
 						</div>
 					</div>												
