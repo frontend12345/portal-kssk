@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Portal.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Portal.Controllers
 {
@@ -47,98 +49,110 @@ namespace Portal.Controllers
 		
 		// GET: api/Content
 		[HttpGet]
-        public IQueryable<Content> GetContent()
+		[Authorize]
+        public IActionResult GetContent()
         {
-            return context.Content;
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var result = context.Content.Select(a=>new {
+					id = a.Id,
+					menuId = a.MenuId,
+					url = a.Url,
+					content = a.Content1,
+					isActive = a.IsActive
+				});
+				return Ok(result);
+			}
+			return Unauthorized();
         }
 		
 		// PUT: api/Content/5
 		[HttpPut("{id}")]
-        public async Task<IActionResult> PutContent([FromRoute] int id,[FromBody] Content content)
+		[Authorize]
+        public async Task<IActionResult> PutContent([FromRoute] int id, [FromBody] Content content)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            if (id != content.Id)
-            {
-                return BadRequest();
-            }
+				if (id != content.Id)
+				{
+					return BadRequest();
+				}
 
-            context.Content.Update(content);
+				content.CreatedBy = Convert.ToInt32(idUser);
+				content.CreatedDate = DateTime.Now;
+				context.Content.Update(content);
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+				try
+				{
+					await context.SaveChangesAsync();
+				}
+				catch (Exception)
+				{
+					return BadRequest();
+				}
 
-            return Ok(content);
+				return Ok(content);
+			}
+			return Unauthorized();
         }
 		
         // POST: api/Content
 		[HttpPost]
+		[Authorize]
         public async Task<IActionResult> PostContent([FromBody] Content content)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            content.CreatedBy = 1;
-            content.CreatedDate = DateTime.Now;
-            context.Content.Add(content);
-            await context.SaveChangesAsync();
+				content.CreatedBy = Convert.ToInt32(idUser);
+				content.CreatedDate = DateTime.Now;
+				context.Content.Add(content);
+				await context.SaveChangesAsync();
 
-            return Ok(content);
-        }
-		
-        // POST: api/Content
-		[HttpPost("list")]
-        public async Task<IActionResult> PostContentList([FromBody] List<Content> content)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-			foreach(var con in content){
-				con.CreatedBy = 1;
-				con.CreatedDate = DateTime.Now;
-				context.Content.Add(con);
+				return Ok(content);
 			}
-            await context.SaveChangesAsync();
-
-            return Ok(content);
+			return Unauthorized();
         }
 
         // DELETE: api/Content/5
 		[HttpDelete("{id}")]
+		[Authorize]
         public async Task<IActionResult> DeleteContent([FromRoute] int id)
         {
-            var content = context.Content.Where(a=>a.Id==id);
-            if (content == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                foreach (var con in content)
-                {
-                    context.Content.Remove(con);
-                }
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var content = context.Content.Where(a=>a.Id==id);
+				if (content == null)
+				{
+					return NotFound();
+				}
+				try
+				{
+					foreach (var con in content)
+					{
+						context.Content.Remove(con);
+					}
+					await context.SaveChangesAsync();
+				}
+				catch (Exception ex) {
+					Console.WriteLine(ex.Message);
+					return BadRequest(ex.Message);
+				}
 
-            return Ok(content);
+				return Ok(content);
+			}
+			return Unauthorized();
         }
     }
 }

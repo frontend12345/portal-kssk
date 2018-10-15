@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Portal.Controllers
 {
-    public class AdminController : Controller
+    public class PengelolaController : Controller
     {
         public IActionResult Index()
         {

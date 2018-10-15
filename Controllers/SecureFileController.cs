@@ -34,13 +34,23 @@ namespace Portal.Controllers
 			var appRoot = appPathMatcher.Match(exePath).Value;
 			return appRoot;
 		}
-
+		
 		// GET: api/SecureFiles
 		[HttpGet]
 		[Authorize]
-        public IQueryable<SecureFiles> GetFiles()
+        public IActionResult GetFiles()
         {
-            return context.SecureFiles;
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var result = context.SecureFiles.Select(a=>new {
+					id = a.Id,
+					filename = a.Filename,
+					description = a.Description,
+					order = a.Order
+				});
+				return Ok(result);
+			}
+			return Unauthorized();
         }
 		
         // POST: api/SecureFiles
@@ -113,91 +123,91 @@ namespace Portal.Controllers
 		
 		// PUT: api/SecureFiles/5
 		[HttpPut("{id}")]
-        public async Task<IActionResult> PutFiles([FromRoute] int id,[FromBody] SecureFiles files)
+		[Authorize]
+        public async Task<IActionResult> PutFiles([FromRoute] int id, [FromBody] SecureFiles files)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            if (id != files.Id)
-            {
-                return BadRequest();
-            }
+				if (id != files.Id)
+				{
+					return BadRequest();
+				}
 
-            context.SecureFiles.Update(files);
+				files.CreatedBy = Convert.ToInt32(idUser);
+				files.CreatedDate = DateTime.Now;
+				context.SecureFiles.Update(files);
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+				try
+				{
+					await context.SaveChangesAsync();
+				}
+				catch (Exception)
+				{
+					return BadRequest();
+				}
 
-            return Ok(files);
+				return Ok(files);
+			}
+			return Unauthorized();
         }
 		
         // POST: api/SecureFiles
 		[HttpPost]
+		[Authorize]
         public async Task<IActionResult> PostFiles([FromBody] SecureFiles files)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            files.CreatedBy = 1;
-            files.CreatedDate = DateTime.Now;
-            context.SecureFiles.Add(files);
-            await context.SaveChangesAsync();
+				files.CreatedBy = Convert.ToInt32(idUser);
+				files.CreatedDate = DateTime.Now;
+				context.SecureFiles.Add(files);
+				await context.SaveChangesAsync();
 
-            return Ok(files);
-        }
-		
-        // POST: api/SecureFiles
-		[HttpPost("list")]
-        public async Task<IActionResult> PostFiles([FromBody] List<SecureFiles> files)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-			foreach(var fl in files){
-				fl.CreatedBy = 1;
-				fl.CreatedDate = DateTime.Now;
-				context.SecureFiles.Add(fl);
+				return Ok(files);
 			}
-            await context.SaveChangesAsync();
-
-            return Ok(files);
+			return Unauthorized();
         }
 
         // DELETE: api/SecureFiles/5
 		[HttpDelete("{id}")]
+		[Authorize]
         public async Task<IActionResult> DeleteFiles([FromRoute] int id)
         {
-            var files = context.SecureFiles.Where(a=>a.Id==id);
-            if (files == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                foreach (var file in files)
-                {
-                    context.SecureFiles.Remove(file);
-                }
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var files = context.SecureFiles.Where(a=>a.Id==id);
+				if (files == null)
+				{
+					return NotFound();
+				}
+				try
+				{
+					foreach (var fl in files)
+					{
+						context.SecureFiles.Remove(fl);
+					}
+					await context.SaveChangesAsync();
+				}
+				catch (Exception ex) {
+					Console.WriteLine(ex.Message);
+					return BadRequest(ex.Message);
+				}
 
-            return Ok(files);
+				return Ok(files);
+			}
+			return Unauthorized();
         }
     }
 }

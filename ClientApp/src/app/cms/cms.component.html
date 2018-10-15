@@ -58,7 +58,7 @@
 		</div>
 	</div>
 </header><!-- #header -->
-<div *ngIf="!showDownload && !showLogin && selectedMenu.mode!='full'">
+<div *ngIf="contentPage=='portal' && selectedMenu.mode!='full'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
 		<div class="container">				
@@ -133,8 +133,8 @@
 		<!-- End event-details Area -->	
 	</div>
 </div>
-<div *ngIf="!showDownload && !showLogin && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
-<div *ngIf="showLogin">
+<div *ngIf="contentPage=='portal' && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
+<div *ngIf="contentPage=='login'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
 		<div class="container">				
@@ -180,17 +180,20 @@
 	</section>
 	<!-- End post-content Area -->	
 </div>	
-<div *ngIf="showDownload || showAdmin">
+<div *ngIf="contentPage=='admin' || contentPage=='download' || contentPage=='crud' || contentPage=='form'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
 		<div class="container">				
 			<div class="row d-flex align-items-center justify-content-center">
 				<div class="about-content col-lg-12">
-					<h1 *ngIf="showDownload" class="text-white">
-						Download Dokumen Penting	
+					<h1 *ngIf="contentPage=='download'" class="text-white">
+						Secure Download Dokumen	
 					</h1>
-					<h1 *ngIf="showAdmin" class="text-white">
+					<h1 *ngIf="contentPage=='admin'" class="text-white">
 						Profil
+					</h1>
+					<h1 *ngIf="contentPage=='crud'" class="text-white">
+						Administrasi {{crud.title}}
 					</h1>
 				</div>	
 			</div>
@@ -200,17 +203,20 @@
 	<section class="event-details-area section-gap">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8 event-details-left">				
-					<div class="menu-content pb-70 col-lg-12">
-						<div *ngIf="showDownload" class="title text-center">
-							<h1>Daftar dokumen penting</h1>
+				<div class="col-lg-9 event-details-left">				
+					<div class="menu-content col-lg-12">
+						<div *ngIf="contentPage=='download'" class="title text-center">
+							<h1>Daftar dokumen</h1>
 						</div>
-						<div *ngIf="showAdmin" class="title text-center">
+						<div *ngIf="contentPage=='admin'" class="title text-center">
 							<h1>Selamat Datang, {{userLogin.username}}</h1>
 						</div>
+						<div *ngIf="contentPage=='crud'" class="title text-center">
+							<h1>Daftar {{crud.title}}</h1>
+						</div>
 					</div>
-					<div class="menu-content pb-70 col-lg-12">
-						<ng-container *ngIf="showDownload">
+					<div class="menu-content pt-20 col-lg-12">
+						<ng-container *ngIf="contentPage=='download'">
 						<div class="pb-30" *ngFor="let file of listSecureFile">
 							<div class="single-carusel row align-items-center">
 								<div class="col-12 col-md-6 thumb">
@@ -223,31 +229,237 @@
 											<input type="text" class="form-control" formControlName="secretKey" placeholder="Secret Key" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Secret Key'">
 										</div>
 										<a href="#" (click)="secureDownload(file.filename)" class="primary-btn">Download</a>	
+										<div *ngIf="errors">{{errors}}</div>
 									</form>
 								</div>
 							</div>
 						</div>
 						</ng-container>
-						<div *ngIf="showAdmin">
+						<div class="pt-20" *ngIf="contentPage=='admin'">
 							Berikut ini adalah QR spesifik untuk Anda. Silakan gunakan Authenticator untuk generate kode digital Anda.<br />
 							<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" style="display:inline-block;overflow:hidden;background:url(https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Get_it_on_Google_play.svg/136px-Get_it_on_Google_play.svg.png) no-repeat;width:135px;height:40px;"></a> atau 
 							<a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/appstore-lrg.svg) no-repeat;width:135px;height:40px;"></a><br />
 							<img [src]="qrCode" height="200">
+						</div>	
+						<ng-container *ngIf="contentPage=='crud'">
+						<div class="pt-20 table-responseve" >
+							<a href="#" (click)="openForm()">Tambah {{crud.title}}</a>
+							<ng-container *ngIf="crud.title=='menu'">
+							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<thead class="thead-light">
+								<tr>
+									<th><mfDefaultSorter by="title">Title</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="parentId">Parent</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="isActive">Is Active</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="order">Order</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="url">Url</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="mode">Mode</mfDefaultSorter></th>
+									<th colspan="2">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr *ngFor="let item of mf.data">
+									<td>{{item.title}}</td>
+									<td>{{getTitle(crud.data,item.parentId)}}</td>
+									<td>{{item.isActive}}</td>
+									<td>{{item.order}}</td>
+									<td>{{item.url}}</td>
+									<td>{{item.mode}}</td>
+									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
+									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
+								</tr>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="6">
+										<br />
+										<mfBootstrapPaginator></mfBootstrapPaginator>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
+							</ng-container>
+							<ng-container *ngIf="crud.title=='content'">
+							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<thead class="thead-light">
+								<tr>
+									<th><mfDefaultSorter by="menuId">Menu</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="content">Content</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="isActive">Is Active</mfDefaultSorter></th>
+									<th colspan="2">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr *ngFor="let item of mf.data">
+									<td>{{getTitle(tempData,item.menuId)}}</td>
+									<td>{{item.content}}</td>
+									<td>{{item.isActive}}</td>
+									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
+									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
+								</tr>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="6">
+										<br />
+										<mfBootstrapPaginator></mfBootstrapPaginator>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
+							</ng-container>
+							<ng-container *ngIf="crud.title=='file'">
+							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<thead class="thead-light">
+								<tr>
+									<th><mfDefaultSorter by="contentId">Content</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="filename">Filename</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="description">Description</mfDefaultSorter></th>
+									<th colspan="2">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr *ngFor="let item of mf.data">
+									<td>{{getContent(tempData,item.contentId)}}</td>
+									<td>{{item.filename}}</td>
+									<td>{{item.description}}</td>
+									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
+									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
+								</tr>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="6">
+										<br />
+										<mfBootstrapPaginator></mfBootstrapPaginator>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
+							</ng-container>
+						</div>
+						</ng-container>					
+						<div *ngIf="contentPage=='form'" class="pt-20">
+							<h4>Form {{crud.title}}</h4>
+							<ng-container *ngIf="crud.title=='menu'">
+							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
+								<input type="hidden" formControlName="id">
+								<div class="mt-10">
+									<div>Title</div>
+									<input type="text" class="form-control" formControlName="title" placeholder="Title" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Title'">
+								</div>
+								<div class="mt-10">
+									<div>Parent</div>
+									<select formControlName="parentId">
+										<option [value]="null"></option>
+										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}}</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>Order</div>
+									<input type="text" class="form-control" formControlName="order" placeholder="Order" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Order'">
+								</div>
+								<div class="mt-10">
+									<div>Url</div>
+									<input type="text" class="form-control" formControlName="url" placeholder="Url" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Url'">
+								</div>
+								<div class="mt-10">
+									<div>Mode</div>
+									<select formControlName="mode">
+										<option [value]="'single'">Single</option>
+										<option [value]="'full'">Full</option>
+										<option [value]="'multiplefoto'">Multiple Foto</option>
+										<option [value]="'multiplefile'">Multiple File</option>
+										<option [value]="'multipletext'">Multiple Text</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>Is Active?</div>
+									<select formControlName="isActive">
+										<option [value]="true">True</option>
+										<option [value]="false">False</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>
+										<a href="#" (click)="addUpdate()" class="primary-btn text-uppercase">Simpan</a>	atau 
+										<a href="#" (click)="backToCrud()" class="primary-btn text-uppercase">Batal</a>	
+									</div>
+								</div>
+							</form>
+							</ng-container>	
+							<ng-container *ngIf="crud.title=='content'">
+							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
+								<input type="hidden" formControlName="id">
+								<div class="mt-10">
+									<div>Menu</div>
+									<select formControlName="menuId">
+										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}}</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>Content</div>
+									<textarea [froalaEditor]="textOptions" formControlName="content"></textarea>
+								</div>
+								<div class="mt-10">
+									<div>Is Active?</div>
+									<select formControlName="isActive">
+										<option [value]="true">True</option>
+										<option [value]="false">False</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>
+										<a href="#" (click)="addUpdate()" class="primary-btn text-uppercase">Simpan</a>	atau 
+										<a href="#" (click)="backToCrud()" class="primary-btn text-uppercase">Batal</a>	
+									</div>
+								</div>
+							</form>
+							</ng-container>		
+							<ng-container *ngIf="crud.title=='file'">
+							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
+								<input type="hidden" formControlName="id">
+								<input type="hidden" formControlName="filename">
+								<div class="mt-10">
+									<div>Content</div>
+									<select formControlName="contentId">
+										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.content.substring(0,50)}}</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>Description</div>
+									<textarea [froalaEditor]="textOptions" formControlName="description"></textarea>
+								</div>
+								<div class="mt-10">
+									<div>File</div>
+									<input type="file" formControlName="file" (change)="handleFile($event.target.files)" placeholder="Upload file">
+								</div>
+								<div class="mt-10">
+									<div>
+										<a href="#" (click)="addUpdate()" class="primary-btn text-uppercase">Simpan</a>	atau 
+										<a href="#" (click)="backToCrud()" class="primary-btn text-uppercase">Batal</a>	
+									</div>
+								</div>
+							</form>
+							</ng-container>							
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-4 event-details-right">
+				<div class="col-lg-3 event-details-right">
 					<div class="widget-wrap">
 						<div class="single-sidebar-widget newsletter-widget">
 							<h4 class="newsletter-title">Administrasi</h4>
 							<p>
-								<a href="#" (click)="openAdminMenu()">Menu</a>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('menu')">Menu</a>
 							</p>
 							<p>
-								<a href="#" (click)="openAdminContent()">Content</a>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('content')">Content</a>
 							</p>
 							<p>
-								<a href="#" (click)="openAdminDokumen()">Dokumen</a>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('file')">Dokumen</a>
+							</p>
+							<p>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('user')">User</a>
 							</p>
 							<p>
 								<a href="#" (click)="openAdminSecureDokumen()">Secure Dokumen</a>

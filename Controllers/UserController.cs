@@ -75,6 +75,7 @@ namespace Portal.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.Username.ToString()),
                     new Claim("Password", user.Password.ToString()),
+                    new Claim("Id", user.Id.ToString()),
                     new Claim("Role", user.Role.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
@@ -87,97 +88,109 @@ namespace Portal.Controllers
             user.Password = null;
             return Ok(user);
         }
-
+		
 		// GET: api/User
 		[HttpGet]
-        public IQueryable<User> GetUser()
+		[Authorize]
+        public IActionResult GetUser()
         {
-            return context.User;
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var result = context.User.Select(a=>new {
+					id = a.Id,
+					username = a.Username,
+					password = a.Password,
+					role = a.Role,
+					authenticator = a.Authenticator
+				});
+				return Ok(result);
+			}
+			return Unauthorized();
         }
 		
 		// PUT: api/User/5
 		[HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] int id,[FromBody] User user)
+		[Authorize]
+        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+				if (id != user.Id)
+				{
+					return BadRequest();
+				}
 
-            context.User.Update(user);
+				context.User.Update(user);
 
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+				try
+				{
+					await context.SaveChangesAsync();
+				}
+				catch (Exception)
+				{
+					return BadRequest();
+				}
 
-            return Ok(user);
+				return Ok(user);
+			}
+			return Unauthorized();
         }
 		
         // POST: api/User
 		[HttpPost]
+		[Authorize]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-			
-            context.User.Add(user);
-            await context.SaveChangesAsync();
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
+			if(role=="Admin"){
+				if (!ModelState.IsValid)
+				{
+					return BadRequest(ModelState);
+				}
 
-            return Ok(user);
-        }
-		
-        // POST: api/User
-		[HttpPost("list")]
-        public async Task<IActionResult> PostUserList([FromBody] List<User> user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-			
-			foreach(var us in user){
-				context.User.Add(us);
+				context.User.Add(user);
+				await context.SaveChangesAsync();
+
+				return Ok(user);
 			}
-            await context.SaveChangesAsync();
-
-            return Ok(user);
+			return Unauthorized();
         }
 
         // DELETE: api/User/5
 		[HttpDelete("{id}")]
+		[Authorize]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
-            var user = context.User.Where(a=>a.Id==id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            try
-            {
-                foreach (var us in user)
-                {
-                    context.User.Remove(us);
-                }
-                await context.SaveChangesAsync();
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
+			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
+			if(role=="Admin"){
+				var user = context.User.Where(a=>a.Id==id);
+				if (user == null)
+				{
+					return NotFound();
+				}
+				try
+				{
+					foreach (var us in user)
+					{
+						context.User.Remove(us);
+					}
+					await context.SaveChangesAsync();
+				}
+				catch (Exception ex) {
+					Console.WriteLine(ex.Message);
+					return BadRequest(ex.Message);
+				}
 
-            return Ok(user);
+				return Ok(user);
+			}
+			return Unauthorized();
         }
     }
 }

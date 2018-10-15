@@ -34,6 +34,29 @@ export class UserService {
     return this.http.get("/api/User/qrcode", { headers: headers, responseType: 'text' });
   };
   
+  getData(item:string) { 
+	let headers: HttpHeaders = this.setHeaders();
+    return this.http.get("/api/"+item, { headers: headers, responseType: 'text' });
+  };
+  
+  postData(item:string, data:any) { 
+	let headers: HttpHeaders = this.setHeaders();
+	if(item==="file"){
+		headers = headers.append('Content-Type', 'multipart/form-data');
+	}
+    return this.http.post("/api/"+item, data, { headers: headers, responseType: 'text' });
+  };
+  
+  putData(item:string, data:any) { 
+	let headers: HttpHeaders = this.setHeaders();
+    return this.http.put("/api/"+item+"/"+data.id, data, { headers: headers, responseType: 'text' });
+  };
+  
+  deleteData(item:string, id:number) { 
+	let headers: HttpHeaders = this.setHeaders();
+    return this.http.delete("/api/"+item+"/"+id, { headers: headers, responseType: 'text' });
+  };
+  
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       console.error('An error occurred:', error.error.message);

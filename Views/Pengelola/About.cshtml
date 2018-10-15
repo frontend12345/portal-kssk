@@ -1,35 +1,10 @@
-﻿
-    {
-        ViewData["Title"] = "API";
-    }
+﻿@{
+	Layout = "_Layout";
+}
+@{
+	ViewData["Title"] = "Informasi";
+}
 
-    <h1 class="text-danger">List API E-PPID.</h1>
-    <h2 class="text-danger">Bentuk API ini adalah REST API, silakan gunakan untuk keperluan development.</h2>
-    <h2 class="text-danger">User yang digunakan untuk login adalah si pemohon informasi.</h2>
-
-    <h3>API berikut bisa diakses tanpa login</h3>
-    <p>
-        GET api/CmsMenu -> Mendapatkan semua menu CMS.<br />
-        GET api/CmsContent/{id} -> Mendapatkan content CMS berdasarkan id CMS menu.<br />
-        GET api/Pemohon/JalurPemohon -> Mendapatkan jalur pemohon.<br />
-        GET api/Pemohon/JenisPemohon -> Mendapatkan jenis pemohon.<br />
-        GET api/Pemohon/JenisNik -> Mendapatkan jenis nik.<br />
-        GET api/Pemohon/CaraMemperoleh -> Mendapatkan informasi cara memperoleh.<br />
-        GET api/Pemohon/CaraMendapatkan -> Mendapatkan informasi cara mendapatkan.<br />
-        GET api/Pemohon/PengajuKeberatan -> Mendapatkan informasi pengaju keberatan.<br />
-        POST api/Pemohon -> Membuat pemohon baru dengan field sbb (JalurPemohon,JenisPemohon,JenisNIK,NIK,NPWP,Nama,Pekerjaan,Alamat,Telp,Fax,Keterangan,Email,Password)<br />Contoh JSON POST: {"JalurPemohon":"Datang Langsung","JenisPemohon":"Kelompok Orang","JenisNIK":"KTP Penerima Kuasa","NIK":"3387871928374446","NPWP":"iy","Nama":"keren","Pekerjaan":"iy","Alamat":"iy","Telp":"123123213","Fax":"12213213","Keterangan":"asdsadsa","Email":"bill@microsoft4.com","Password":"billkeren"}<br />
-        POST api/Pemohon/RequestReset -> Melakukan request reset password dengan dengan hasil 4 karakter authKey yang dikirimkan via email<br />
-        POST api/Pemohon/Reset -> Melakukan reset password dengan field sbb (email, password, authKey). password adalah password baru, authKey didapatkan dari request reset password<br />
-    </p>
-
-    <h3>API berikut bisa diakses dengan menggunakan login</h3>
-    <p>
-        GET api/Pemohon/Saya -> Mendapatkan informasi lengkap user yang sedang login.<br /><br />
-        POST api/Permohonan -> Membuat permohonan baru dengan field sbb (ParentId,PemohonId,NoRegistrasi,JalurPermohonan,JenisPemohon,JenisNIK,NIK,IsiPermohonan,Tujuan,CaraPerolehInfo,CaraDapatkanInfo,TglJatuhTempo,TglTindakLanjut,Status,CreatedBy,CreatedDate)<br /><br />
-        POST api/Keberatan -> Membuat keberatan baru dengan field sbb (PemohonId,PermohonanId,JenisPemohon,NamaPemohon,JenisIdentitas,NomorIdentitas,NamaKuasa,NIKKuasa,TelpFaxEmailKuasa,AlamatKuasa,NoKeberatan,JalurKeberatan,AlasanKeberatan,AlasanPembatalan,AlasanPemutihan,TglTindakLanjut,TglJatuhTempo,Jawaban,Status,CreatedBy)<br /><br />
-        POST api/Keberatan/Permohonan -> Mendapatkan informasi permohonan berdasar keberatan<br /><br />
-        POST api/FilePermohonan -> Mengupload file permohonan baru dengan field sbb (file->satu file,PermohonanId,JenisFile,NamaFilePermohonan,authKey->4karakter pertama checksum SHA1 dari nama pemohon dan nama file (UPPER CASE))<br /><br />
-        GET api/FilePermohonan/Download/{id}/{authKey} -> Mendownload file permohonan dengan id file (didapatkan dari api GET api/Pemohon/Saya) dan authKey->4karakter pertama checksum SHA1 dari nama pemohon dan nama file (UPPER CASE))<br /><br />
-        POST api/FileKeberatan -> Mengupload file keberatan baru dengan field sbb (file->satu file,KeberatanId,JenisFileKeberatan,NamaFileKeberatan,authKey->4karakter pertama checksum SHA1 dari nama pemohon dan nama file (UPPER CASE))<br /><br />
-        GET api/FileKeberatan/Download/{id}/{authKey} -> Mendownload file keberatan dengan id file (didapatkan dari api GET api/Pemohon/Saya) dan authKey->4karakter pertama checksum SHA1 dari nama pemohon dan nama file (UPPER CASE))<br /><br />
-    </p>
+<p>
+	<br />
+</p>
