@@ -336,6 +336,35 @@
 								</tr>
 								</tfoot>
 							</table>
+							</ng-container>							
+							<ng-container *ngIf="crud.title=='user'">
+							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<thead class="thead-light">
+								<tr>
+									<th><mfDefaultSorter by="username">Username</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="password">Password</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="role">Role</mfDefaultSorter></th>
+									<th colspan="2">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr *ngFor="let item of mf.data">
+									<td>{{item.username}}</td>
+									<td>XXXX</td>
+									<td>{{item.role}}</td>
+									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
+									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
+								</tr>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="6">
+										<br />
+										<mfBootstrapPaginator></mfBootstrapPaginator>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
 							</ng-container>
 						</div>
 						</ng-container>					
@@ -416,6 +445,33 @@
 								</div>
 							</form>
 							</ng-container>		
+							<ng-container *ngIf="crud.title=='user'">
+							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
+								<input type="hidden" formControlName="id">
+								<input type="hidden" formControlName="authenticator">
+								<div class="mt-10">
+									<div>Username</div>
+									<input type="text" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+								</div>
+								<div class="mt-10">
+									<div>Password</div>
+									<input type="password" class="form-control" formControlName="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+								</div>
+								<div class="mt-10">
+									<div>Role</div>
+									<select formControlName="role">
+										<option [value]="'Pengguna'">Pengguna</option>
+										<option [value]="'Admin'">Admin</option>
+									</select>
+								</div>
+								<div class="mt-10">
+									<div>
+										<a href="#" (click)="addUpdate()" class="primary-btn text-uppercase">Simpan</a>	atau 
+										<a href="#" (click)="backToCrud()" class="primary-btn text-uppercase">Batal</a>	
+									</div>
+								</div>
+							</form>
+							</ng-container>	
 							<ng-container *ngIf="crud.title=='file'">
 							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
 								<input type="hidden" formControlName="id">

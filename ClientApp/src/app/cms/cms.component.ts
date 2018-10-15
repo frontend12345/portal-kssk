@@ -215,6 +215,15 @@ export class CmsComponent implements OnInit {
 					file: [null, Validators.required]
 				});
 			}
+			if(this.crud.title=="user"){
+				this.crudForm = this.formBuilder.group({
+					id: [''],
+					username: ['', Validators.required],
+					password: ['', Validators.required],
+					role: ['Pengguna', Validators.required],
+					authenticator: ['', Validators.required]
+				});
+			}
 		}
 	};
 	edit(id: number){
@@ -293,6 +302,14 @@ export class CmsComponent implements OnInit {
 			formData.append('files', dataPost);
 			return formData;
 		}
+		if(this.crud.title=="user"){
+			dataPost = {
+				'username': this.crudForm.value.username,
+				'password': this.crudForm.value.password,
+				'role': this.crudForm.value.role,
+				'authenticator': '123'
+			}
+		}
 		return dataPost;
 	};
 	setDataCrud(res: any){
@@ -324,6 +341,16 @@ export class CmsComponent implements OnInit {
 				'filename': res.filename,
 				'description': res.description,
 				'order': res.order
+			});
+			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
+		}
+		if(this.crud.title=="user"){
+			this.crud.data.push({
+				'id': res.id,
+				'username': res.username,
+				'password': res.password,
+				'role': res.role,
+				'authenticator': res.authenticator
 			});
 			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
 		}

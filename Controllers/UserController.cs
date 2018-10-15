@@ -126,6 +126,8 @@ namespace Portal.Controllers
 					return BadRequest();
 				}
 
+				var sha256Pass = this.ComputeSha256Hash(user.Password);
+				user.Password = sha256Pass.ToUpper();
 				context.User.Update(user);
 
 				try
@@ -154,7 +156,8 @@ namespace Portal.Controllers
 				{
 					return BadRequest(ModelState);
 				}
-
+				var sha256Pass = this.ComputeSha256Hash(user.Password);
+				user.Password = sha256Pass.ToUpper();
 				context.User.Add(user);
 				await context.SaveChangesAsync();
 
