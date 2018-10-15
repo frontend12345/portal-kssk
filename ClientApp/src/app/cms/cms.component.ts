@@ -36,6 +36,7 @@ export class CmsComponent implements OnInit {
 	contentPage: string;
 	crud:any = JSON.parse('{"title":"", "data":""}');
 	tempData: any[];
+	fileList: FileList;
 	
 	constructor(
 		private route: Router,
@@ -215,6 +216,15 @@ export class CmsComponent implements OnInit {
 					file: [null, Validators.required]
 				});
 			}
+			if(this.crud.title=="securefile"){
+				this.crudForm = this.formBuilder.group({
+					id: [''],
+					filename: ['', Validators.required],
+					description: [''],
+					order: ['', Validators.required],
+					file: [null, Validators.required]
+				});
+			}
 			if(this.crud.title=="user"){
 				this.crudForm = this.formBuilder.group({
 					id: [''],
@@ -232,7 +242,7 @@ export class CmsComponent implements OnInit {
 			if(res.length==1){
 				this.openForm();
 				let defaultValue: any = res[0];
-				if(this.crud.title=="file"){
+				if(this.crud.title=="file" || this.crud.title=="securefile"){
 					defaultValue.file = "";
 				}
 				this.crudForm.setValue(defaultValue);
@@ -270,6 +280,30 @@ export class CmsComponent implements OnInit {
 			}
 		}
 	};
+	getUrlAssets(filename: string){
+		var extension = filename.split('.').pop().toLowerCase();
+		if(extension=="jpg"||extension=="jpeg"||extension=="png"||extension=="bmp"){
+			return "/assets/foto/"+filename;
+		}else{
+			return "/assets/file/"+filename;
+		}
+	};
+	copyToClipboard(copyText: string) {
+		let selBox = document.createElement('textarea');
+		selBox.style.position = 'fixed';
+		selBox.style.left = '0';
+		selBox.style.top = '0';
+		selBox.style.opacity = '0';
+		selBox.value = copyText;
+		document.body.appendChild(selBox);
+		selBox.focus();
+		selBox.select();
+		document.execCommand('copy');
+		document.body.removeChild(selBox);
+
+		/* Alert the copied text */
+		alert("Copied to clipboard: " + copyText);
+	}
 	setDataPost():any {
 		let dataPost: any = {};
 		if(this.crud.title=="menu"){
@@ -291,15 +325,20 @@ export class CmsComponent implements OnInit {
 			}
 		}
 		if(this.crud.title=="file"){
-			dataPost = {
-				'contentId': this.crudForm.value.contentId,
-				'filename': this.crudForm.value.filename,
-				'description': this.crudForm.value.description,
-				'order': this.crudForm.value.order
-			}
 			let formData:FormData = new FormData();
-			formData.append('uploadFiles', this.crud.data.file, this.crud.data.filename);
-			formData.append('files', dataPost);
+			formData.append('file', this.fileList[0]);
+			formData.append('contentId', this.crudForm.value.contentId);
+			formData.append('filename', this.crudForm.value.filename);
+			formData.append('description', this.crudForm.value.description);
+			formData.append('order', this.crudForm.value.order);
+			return formData;
+		}
+		if(this.crud.title=="securefile"){
+			let formData:FormData = new FormData();
+			formData.append('file', this.fileList[0]);
+			formData.append('filename', this.crudForm.value.filename);
+			formData.append('description', this.crudForm.value.description);
+			formData.append('order', this.crudForm.value.order);
 			return formData;
 		}
 		if(this.crud.title=="user"){
@@ -344,6 +383,15 @@ export class CmsComponent implements OnInit {
 			});
 			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
 		}
+		if(this.crud.title=="securefile"){
+			this.crud.data.push({
+				'id': res.id,
+				'filename': res.filename,
+				'description': res.description,
+				'order': res.order
+			});
+			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
+		}
 		if(this.crud.title=="user"){
 			this.crud.data.push({
 				'id': res.id,
@@ -364,7 +412,11 @@ export class CmsComponent implements OnInit {
 					this.setDataCrud(res);
 				});	
 			} else {
-				dataPost.id = this.crudForm.value.id;
+				if(this.crud.title=="file" || this.crud.title=="securefile"){
+					dataPost.append('id', this.crudForm.value.id);
+				}else{
+					dataPost.id = this.crudForm.value.id;
+				}
 				this.userService.putData(this.crud.title,dataPost).subscribe(result => {
 					this.crud.data.splice(this.crud.data.findIndex(v => v.id === this.crudForm.value.id), 1);
 					let res = JSON.parse(result);
@@ -380,7 +432,10 @@ export class CmsComponent implements OnInit {
 		}
 	};
 	handleFile(files: FileList) {
-		this.crud.data.filename = files[0].name;
+		this.fileList = files;
+		this.crudForm.patchValue({
+			'filename':files[0].name
+		});
 	}
 	
 	secureDownload(filename: string){

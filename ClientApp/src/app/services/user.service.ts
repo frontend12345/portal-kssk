@@ -41,15 +41,16 @@ export class UserService {
   
   postData(item:string, data:any) { 
 	let headers: HttpHeaders = this.setHeaders();
-	if(item==="file"){
-		headers = headers.append('Content-Type', 'multipart/form-data');
-	}
     return this.http.post("/api/"+item, data, { headers: headers, responseType: 'text' });
   };
   
   putData(item:string, data:any) { 
 	let headers: HttpHeaders = this.setHeaders();
-    return this.http.put("/api/"+item+"/"+data.id, data, { headers: headers, responseType: 'text' });
+	if(item==="file"||item==="securefile"){
+		return this.http.put("/api/"+item+"/"+data.get('id'), data, { headers: headers, responseType: 'text' });
+	}else{
+		return this.http.put("/api/"+item+"/"+data.id, data, { headers: headers, responseType: 'text' });
+	}
   };
   
   deleteData(item:string, id:number) { 

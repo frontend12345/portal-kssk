@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Portal.Models;
 using Portal.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Drawing;
 
 namespace Portal.Controllers
 {
@@ -36,6 +41,29 @@ namespace Portal.Controllers
 			return Ok(result);
         }
 		
+		public string GetApplicationRoot()
+		{
+			var exePath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+			Regex appPathMatcher=new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
+			var appRoot = appPathMatcher.Match(exePath).Value;
+			return appRoot;
+		}
+		
+		public  bool IsImage(IFormFile file)
+        {
+            try  
+			{
+				using (var bitmap = new Bitmap(file.OpenReadStream()))
+				{                        
+					return !bitmap.Size.IsEmpty;
+				}
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+        }
+		
 		// GET: api/Files
 		[HttpGet]
 		[Authorize]
@@ -58,7 +86,7 @@ namespace Portal.Controllers
 		// PUT: api/Files/5
 		[HttpPut("{id}")]
 		[Authorize]
-        public async Task<IActionResult> PutFiles([FromRoute] int id, [FromBody] Files files)
+        public async Task<IActionResult> PutFiles([FromRoute] int id, [FromForm] IFormFile file, [FromForm] Files files)
         {
 			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
 			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
@@ -71,6 +99,30 @@ namespace Portal.Controllers
 				if (id != files.Id)
 				{
 					return BadRequest();
+				}
+				
+				try
+				{
+					var filename = file.FileName;
+					if (filename == null)
+						return Content("filename not present");
+						
+					var pathDir = Path.Combine(GetApplicationRoot(), "ClientApp", "src", "assets", "file");
+					if(this.IsImage(file)){
+						pathDir = Path.Combine(GetApplicationRoot(), "ClientApp", "src", "assets", "foto");					
+					}
+					var pathDirFile = Path.Combine(pathDir,filename);
+					if (file.Length > 0)
+					{
+						using (var stream = new FileStream(pathDirFile, FileMode.Create))
+						{
+							await file.CopyToAsync(stream);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					return BadRequest(ex);
 				}
 
 				files.CreatedBy = Convert.ToInt32(idUser);
@@ -94,7 +146,7 @@ namespace Portal.Controllers
         // POST: api/Files
 		[HttpPost]
 		[Authorize]
-        public async Task<IActionResult> PostFiles(FilesUpload fileUpload)
+        public async Task<IActionResult> PostFiles([FromForm] IFormFile file, [FromForm] Files files)
         {
 			var role = User.Claims.FirstOrDefault(x => x.Type.Equals("Role")).Value;
 			var idUser = User.Claims.FirstOrDefault(x => x.Type.Equals("Id")).Value;
@@ -103,13 +155,37 @@ namespace Portal.Controllers
 				{
 					return BadRequest(ModelState);
 				}
+				
+				try
+				{
+					var filename = file.FileName;
+					if (filename == null)
+						return Content("filename not present");
+						
+					var pathDir = Path.Combine(GetApplicationRoot(), "ClientApp", "src", "assets", "file");
+					if(this.IsImage(file)){
+						pathDir = Path.Combine(GetApplicationRoot(), "ClientApp", "src", "assets", "foto");					
+					}
+					var pathDirFile = Path.Combine(pathDir,filename);
+					if (file.Length > 0)
+					{
+						using (var stream = new FileStream(pathDirFile, FileMode.Create))
+						{
+							await file.CopyToAsync(stream);
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					return BadRequest(ex);
+				}
 
-				fileUpload.files.CreatedBy = Convert.ToInt32(idUser);
-				fileUpload.files.CreatedDate = DateTime.Now;
-				context.Files.Add(fileUpload.files);
+				files.CreatedBy = Convert.ToInt32(idUser);
+				files.CreatedDate = DateTime.Now;
+				context.Files.Add(files);
 				await context.SaveChangesAsync();
 
-				return Ok(fileUpload.files);
+				return Ok(files);
 			}
 			return Unauthorized();
         }

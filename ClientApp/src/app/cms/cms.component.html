@@ -308,21 +308,25 @@
 								</tfoot>
 							</table>
 							</ng-container>
-							<ng-container *ngIf="crud.title=='file'">
+							<ng-container *ngIf="crud.title=='file' || crud.title=='securefile'">
 							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
 								<thead class="thead-light">
 								<tr>
-									<th><mfDefaultSorter by="contentId">Content</mfDefaultSorter></th>
+									<th *ngIf="crud.title=='file'"><mfDefaultSorter by="contentId">Content</mfDefaultSorter></th>
 									<th><mfDefaultSorter by="filename">Filename</mfDefaultSorter></th>
 									<th><mfDefaultSorter by="description">Description</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="order">Order</mfDefaultSorter></th>
+									<th *ngIf="crud.title=='file'">URL Access</th>
 									<th colspan="2">Action</th>
 								</tr>
 								</thead>
 								<tbody>
 								<tr *ngFor="let item of mf.data">
-									<td>{{getContent(tempData,item.contentId)}}</td>
+									<td *ngIf="crud.title=='file'" >{{getContent(tempData,item.contentId)}}</td>
 									<td>{{item.filename}}</td>
 									<td>{{item.description}}</td>
+									<td>{{item.order}}</td>
+									<td *ngIf="crud.title=='file'">{{getUrlAssets(item.filename)}}<br /><button (click)="copyToClipboard(getUrlAssets(item.filename))">Copy to clipboard</button></td>
 									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
 									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
 								</tr>
@@ -472,11 +476,11 @@
 								</div>
 							</form>
 							</ng-container>	
-							<ng-container *ngIf="crud.title=='file'">
+							<ng-container *ngIf="crud.title=='file' || crud.title=='securefile'">
 							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
-								<input type="hidden" formControlName="id">
+								<input type="hidden" formControlName="id"> 
 								<input type="hidden" formControlName="filename">
-								<div class="mt-10">
+								<div class="mt-10" *ngIf="crud.title=='file'">
 									<div>Content</div>
 									<select formControlName="contentId">
 										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.content.substring(0,50)}}</option>
@@ -489,6 +493,10 @@
 								<div class="mt-10">
 									<div>File</div>
 									<input type="file" formControlName="file" (change)="handleFile($event.target.files)" placeholder="Upload file">
+								</div>
+								<div class="mt-10">
+									<div>Order</div>
+									<input type="text" class="form-control" formControlName="order" placeholder="Order" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Order'">
 								</div>
 								<div class="mt-10">
 									<div>
@@ -518,7 +526,7 @@
 								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('user')">User</a>
 							</p>
 							<p>
-								<a href="#" (click)="openAdminSecureDokumen()">Secure Dokumen</a>
+								<a href="#" (click)="openCrud('securefile')">Secure Dokumen</a>
 							</p>								
 						</div>
 					</div>												
