@@ -144,6 +144,10 @@ namespace Portal.Controllers
 					
 				var pathDir = Path.Combine(GetApplicationRoot(), "Secure", idUser);
 				var pathDirFile = Path.Combine(pathDir,filename);
+				if (!Directory.Exists(pathDir))
+				{
+					Directory.CreateDirectory(pathDir);
+				}
 				
 				if (file.Length > 0)
 				{
@@ -193,6 +197,10 @@ namespace Portal.Controllers
 					
 				var pathDir = Path.Combine(GetApplicationRoot(), "Secure", idUser);
 				var pathDirFile = Path.Combine(pathDir,filename);
+				if (!Directory.Exists(pathDir))
+				{
+					Directory.CreateDirectory(pathDir);
+				}
 				
 				if (file.Length > 0)
 				{

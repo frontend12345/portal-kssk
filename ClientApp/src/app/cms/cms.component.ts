@@ -155,6 +155,12 @@ export class CmsComponent implements OnInit {
 	openDownload(){
 		this.errors = "";
 		if(this.isAuthenticated){
+					
+			// load secure file
+			this.listSecureFile = [];
+			this.fileService.getListSecureFile().subscribe(resultFile => {					
+				this.listSecureFile = resultFile;
+			});
 			this.contentPage="download";
 		}
 	};
@@ -469,12 +475,6 @@ export class CmsComponent implements OnInit {
 					
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(result));
-					
-					// load secure file
-					this.listSecureFile = [];
-					this.fileService.getListSecureFile().subscribe(resultFile => {					
-						this.listSecureFile = resultFile;
-					});
 					
 					// load qrcode
 					this.userService.getQRCode().subscribe(resultQR => {	
