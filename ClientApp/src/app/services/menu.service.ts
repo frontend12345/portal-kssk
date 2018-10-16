@@ -10,6 +10,10 @@ export class MenuService {
     return this.http.get<any[]>("/api/Menu/navigation");
   };
   
+  getMenuByUrl(url: string) {
+    return this.http.get<any[]>("/api/Menu/url"+url);
+  };
+  
   getLoadData() {
     return this.http.get<any[]>("/api/Menu/loadData");
   };

@@ -6,6 +6,7 @@ import { FileService } from '../services/file.service';
 import { DataService } from '../services/data.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
 	selector: 'app-cms',
@@ -31,6 +32,7 @@ export class CmsComponent implements OnInit {
 	listContent: any[] = [];
 	listFile: any[] = [];
 	listSecureFile: any[] = [];
+	href: string;
 	
 	// for form
 	contentPage: string;
@@ -39,7 +41,7 @@ export class CmsComponent implements OnInit {
 	fileList: FileList;
 	
 	constructor(
-		private route: Router,
+		private router: Router,
 		private menuService: MenuService,
 		private data: DataService,
 		private contentService: ContentService,
@@ -47,6 +49,7 @@ export class CmsComponent implements OnInit {
 		private userService: UserService,
         private formBuilder: FormBuilder
 	) {
+		this.href = location.pathname;
 	};
 
 	ngOnInit() {
@@ -59,6 +62,7 @@ export class CmsComponent implements OnInit {
         this.secureDownloadForm = this.formBuilder.group({
             secretKey: ['', Validators.required]
         });
+		this.openContentByUrl();
 	};
 	
 	public textOptions: Object = {
@@ -91,19 +95,30 @@ export class CmsComponent implements OnInit {
 			if(this.selectedMenu.mode=="single" || this.selectedMenu.mode=="full"){
 				this.contentText = result.content;
 			}else{
-				this.listContent = result;
-				this.currentContent = result[0];
-				this.currentContentIndex = 0;
-				this.listFile = [];
-				this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
-					this.listFile = resultFile;
-				});
+				if(result.length>0){
+					this.listContent = result;
+					this.currentContent = result[0];
+					this.currentContentIndex = 0;
+					this.listFile = [];
+					this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
+						this.listFile = resultFile;
+					});
+				}
 			}
 			this.contentPage="portal";
 		});
 	};
 	
 	// CMS related
+	openContentByUrl(){
+		if(this.href!="/"){
+			this.menuService.getMenuByUrl(this.href).subscribe(result => {
+				if(result!=null){
+					this.open(result);
+				}
+			});	
+		}
+	}
 	hasPrevContent(){
 		return (this.currentContentIndex-1)>=0;
 	};	

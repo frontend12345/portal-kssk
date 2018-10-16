@@ -23,6 +23,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 		ReactiveFormsModule,
 		DataTableModule,
 		RouterModule.forRoot([
+			{path: '**', component: CmsComponent }
 		]),
 		FroalaEditorModule.forRoot(), 
 		FroalaViewModule.forRoot()
