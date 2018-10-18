@@ -195,8 +195,16 @@ namespace Portal.Controllers
 				if (filename == null)
 					return Content("filename not present");
 					
-				var pathDir = Path.Combine(GetApplicationRoot(), "Secure", idUser);
-				var pathDirFile = Path.Combine(pathDir,filename);
+				var pathDir = Path.Combine(Directory.GetCurrentDirectory(), "Secure", idUser);
+				var pathDirFile = Path.Combine(pathDir, filename);
+				if(!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Secure"))){
+					pathDir = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).ToString(), "Secure", idUser);
+					pathDirFile = Path.Combine(pathDir,filename);
+				}
+				if(!Directory.Exists(Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).ToString(), "Secure"))){
+					pathDir = Path.Combine(GetApplicationRoot(), "Secure", idUser);
+					pathDirFile = Path.Combine(pathDir,filename);
+				}
 				if (!Directory.Exists(pathDir))
 				{
 					Directory.CreateDirectory(pathDir);

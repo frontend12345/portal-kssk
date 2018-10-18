@@ -278,36 +278,50 @@ export class CmsComponent implements OnInit {
 		}
 	};
 	getTitle(arr: any[], id: number){
-		if(id!==null && arr.length>=1){
-			let res: any[] = arr.filter(a=>a.id==id);
-			if(res.length==1){
-				return res[0].title;
+		if(arr!==undefined){
+			if(id!==null && arr.length>=1){
+				let res: any[] = arr.filter(a=>a.id==id);
+				if(res.length==1){
+					return res[0].title;
+				}
 			}
 		}
 	};
 	getUrl(arr: any[], id: number){
-		if(id!==null && arr.length>=1){
-			let res: any[] = arr.filter(a=>a.id==id);
-			if(res.length==1){
-				return res[0].url;
+		if(arr!==undefined){
+			if(id!==null && arr.length>=1){
+				let res: any[] = arr.filter(a=>a.id==id);
+				if(res.length==1){
+					return res[0].url;
+				}
 			}
 		}
 	};
 	getContent(arr: any[], id: number){
-		if(id!==null && arr.length>=1){
-			let res: any[] = arr.filter(a=>a.id==id);
-			if(res.length==1){
-				return res[0].content.substring(0,50);
+		if(arr!==undefined){
+			if(id!==null && arr.length>=1){
+				let res: any[] = arr.filter(a=>a.id==id);
+				if(res.length==1){
+					return res[0].content.substring(0,50);
+				}
 			}
 		}
 	};
 	getUrlAssets(filename: string){
-		var extension = filename.split('.').pop().toLowerCase();
-		if(extension=="jpg"||extension=="jpeg"||extension=="png"||extension=="bmp"){
-			return "/assets/foto/"+filename;
-		}else{
-			return "/assets/file/"+filename;
+		if(filename!==undefined){
+			var extension = filename.split('.').pop().toLowerCase();
+			if(extension=="jpg"||extension=="jpeg"||extension=="png"||extension=="bmp"){
+				return "/assets/foto/"+filename;
+			}else{
+				return "/assets/file/"+filename;
+			}
 		}
+	};
+	cleanHtmlTags(input: string){
+		if(input!==null){
+			return input.replace(/<[^>]*>/g, '');
+		}
+		return "";
 	};
 	copyToClipboard(copyText: string) {
 		let selBox = document.createElement('textarea');
