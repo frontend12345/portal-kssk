@@ -30,7 +30,7 @@ namespace Portal.Controllers
 						content = a.Content1,
 						isactive = a.IsActive
 					}).FirstOrDefault();
-				}else if(type == "multiplefoto"||type == "multiplefile"||type == "multipletext"){
+				}else if(type == "multiplefoto"||type == "multiplefile"||type == "multiplefilesmall"||type == "multipletext"){
 					result = context.Content.Where(a=>a.Url==url && a.IsActive==true).Select(a=>new {
 						id = a.Id,
 						menuid = a.MenuId,

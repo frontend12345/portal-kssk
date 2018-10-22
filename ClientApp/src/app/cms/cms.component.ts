@@ -510,6 +510,9 @@ export class CmsComponent implements OnInit {
 						this.qrCode = resultQR;
 					});
                 }
+			},
+			error => {
+				this.errors = "Gagal login";
 			});
 		}
 	};

@@ -2,16 +2,17 @@
 	<div class="header-top">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6 col-sm-6 col-8 header-top-left no-padding">
-					<ul>
-						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="#"><i class="fa fa-instagram"></i></a></li>
-					</ul>			
-				</div> 
-				<div class="col-lg-6 col-sm-6 col-4 header-top-right no-padding">
+					<div class="col-lg-4 col-sm-4 col-4 header-top-left no-padding">			
+					</div>
+					<div class="col-lg-8 col-sm-8 col-8 header-top-right no-padding">
 					<a href="tel:+62 21 350 3504"><span class="lnr lnr-phone-handset"></span> <span class="text"> (021) 350 3504</span></a>
-					<a href="mailto:sekretariat@kssk.go.id"><span class="lnr lnr-envelope"></span> <span class="text">sekretariatkssk@kssk.go.id</span></a>			
+					<a href="mailto:sekretariat@kssk.go.id"><span class="lnr lnr-envelope"></span> <span class="text">sekretariatkssk@kssk.go.id</span></a>	
+					<a href="/contactus"><span class="lnr lnr-phone"></span> <span class="text">ContactUs</span></a>	
+					<a href="/sitemap"><span class="lnr lnr-map"></span> <span class="text">Sitemap</span></a>	
+					<a href="#" *ngIf="!isAuthenticated" (click)="openLogin()">Login</a>
+					<a href="#" *ngIf="isAuthenticated" (click)="openAdmin()">Profil</a>
+					<a href="#" *ngIf="isAuthenticated" (click)="openDownload()">Download</a>
+					<a href="#" *ngIf="isAuthenticated" (click)="logout()">Logout</a>
 				</div>
 			</div>			  					
 		</div>
@@ -36,23 +37,6 @@
 						</ul>
 					</li>
 					</ng-container>
-					<li *ngIf="isAuthenticated" class="menu-has-children" >
-						<a href="#" class="sf-with-ul">Menu User</a>
-						<ul>
-							<li>
-								<a href="#" (click)="openAdmin()">Profil</a>
-							</li>
-							<li>
-								<a href="#" (click)="openDownload()">Download</a>
-							</li>
-							<li>
-								<a href="#" (click)="logout()">Logout</a>
-							</li>
-						</ul>
-					</li>
-					<li *ngIf="!isAuthenticated">
-						<a href="#" (click)="openLogin()">Login</a>
-					</li>
 				</ul>
 			</nav><!-- #nav-menu-container -->			    		
 		</div>
@@ -72,7 +56,7 @@
 		</div>
 	</section>
 	<div *ngIf="selectedMenu.mode=='single'" [innerHTML]="contentText | safeHtml"></div>		
-	<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile'">				
+	<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile' || selectedMenu.mode=='multiplefilesmall'">				
 		<!-- Start event-details Area -->
 		<section class="event-details-area section-gap">
 			<div class="container">
@@ -107,6 +91,34 @@
 										</span>
 									</div>
 								</div>
+							</div>
+						</div>
+						<div *ngIf="selectedMenu.mode=='multiplefilesmall'" class="menu-content pb-70 col-lg-12">
+							<div class="pt-20 table-responseve" >
+								<table class="table table-hover table-sm" [mfData]="listFile" #mf="mfDataTable" [mfRowsOnPage]="30">
+									<thead class="thead-light">
+									<tr>
+										<th><mfDefaultSorter by="description">Deskripsi</mfDefaultSorter></th>
+										<th><mfDefaultSorter by="filename">Nama File</mfDefaultSorter></th>
+										<th>Action</th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr *ngFor="let item of mf.data">
+										<td><div [innerHTML]="item.description | safeHtml"></div></td>
+										<td>{{item.filename}}</td>
+										<td><a href="assets/file/{{item.filename}}">Download</a></td>
+									</tr>
+									</tbody>
+									<tfoot>
+									<tr>
+										<td colspan="3">
+											<br />
+											<mfBootstrapPaginator></mfBootstrapPaginator>
+										</td>
+									</tr>
+									</tfoot>
+								</table>
 							</div>
 						</div>
 						
@@ -156,12 +168,13 @@
 						<h4>Masuk ke dalam sistem kami</h4>
 						<form [formGroup]="loginForm" (ngSubmit)="login()">
 							<div class="form-group">
-								<input type="text" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+								<input type="email" class="form-control" formControlName="username" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username@email.com'">
 							</div>
 							<div class="form-group">
 								<input type="password" class="form-control" formControlName="password" placeholder="Password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
 							</div>
 							<a href="#" (click)="login()" class="primary-btn text-uppercase">Masuk</a>	
+							<div *ngIf="errors">{{errors}}</div>
 						</form>
 					</div>
 				</div>
@@ -403,6 +416,7 @@
 										<option [value]="'full'">Full</option>
 										<option [value]="'multiplefoto'">Multiple Foto</option>
 										<option [value]="'multiplefile'">Multiple File</option>
+										<option [value]="'multiplefilesmall'">Multiple File Table</option>
 										<option [value]="'multipletext'">Multiple Text</option>
 									</select>
 								</div>
@@ -514,7 +528,7 @@
 						<div class="single-sidebar-widget newsletter-widget">
 							<h4 class="newsletter-title">Administrasi</h4>
 							<p>
-								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('menu')">Menu</a>
+								<a href="#" *ngIf="user.role=='Admin'" (click)="openCrud('menu')">Menu</a>
 							</p>
 							<p>
 								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('content')">Content</a>
@@ -524,6 +538,9 @@
 							</p>
 							<p>
 								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('user')">User</a>
+							</p>
+							<p>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('news')">Berita</a>
 							</p>
 							<p>
 								<a href="#" (click)="openCrud('securefile')">Secure Dokumen</a>
@@ -540,8 +557,31 @@
 <footer class="footer-area section-gap">
 	<div class="container">
 		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="single-footer-widget">
+					<img src="assets/img/logo_bi2.png" height="80" alt="" title="Bank Indonesia"  style="margin-left:auto;margin-right:auto;display:block"/>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="single-footer-widget">
+					<img src="assets/img/logo_ojk2.png" height="80" alt="" title="Otoritas Jasa Keuangan"  style="margin-left:auto;margin-right:auto;display:block"/>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="single-footer-widget">
+					<img src="assets/img/logo_lps2.png" height="80" alt="" title="Lembaga Penjamin Simpanan"  style="margin-left:auto;margin-right:auto;display:block"/>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="single-footer-widget">
+					<img src="assets/img/logo_kemenkeu2.png" height="80" alt="" title="Kementerian Keuangan"  style="margin-left:auto;margin-right:auto;display:block"/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-lg-8 col-md-6 col-sm-6">
 				<div class="single-footer-widget">
+					<br>
 					<h4>Kontak Kami</h4>
 					<font color="white">
 					<ul>
@@ -551,19 +591,9 @@
 					</ul>	
 					</font>
 				</div>
-			</div>
-			<div class="col-lg-1 col-md-6 col-sm-6">
-				<div class="single-footer-widget">								
-				</div>
-			</div>
-			<div class="col-lg-2 col-md-6 col-sm-6">
-				<div class="single-footer-widget">								
-				</div>
-			</div>																		
-			<div class="col-lg-2  col-md-6 col-sm-6">
-				<div class="single-footer-widget">
-				</div>
-			</div>											
+			</div>																
+			<div class="col-lg-4 col-md-6 col-sm-6">
+			</div>												
 		</div>
 		<div class="footer-bottom row align-items-center justify-content-between">
 			<p class="footer-text m-0 col-lg-8 col-md-12"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
@@ -571,9 +601,6 @@
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> KOMITE STABILITAS SISTEM KEUANGAN <div style="display: none"> | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a></div> 
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></font></p>
 			<div class="col-lg-4 col-sm-12 footer-social">
-				<a href="#"><i class="fa fa-facebook"></i></a>
-				<a href="#"><i class="fa fa-twitter"></i></a>
-				<a href="#"><i class="fa fa-instagram"></i></a>
 			</div>
 		</div>						
 	</div>
@@ -595,22 +622,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> KOMIT
 			</ul>
 		</li>
 		</ng-container>
-		<li *ngIf="isAuthenticated" class="menu-has-children" >
-			<a href="#" class="sf-with-ul">Menu User</a>
-			<ul>
-				<li>
-					<a href="#" (click)="openAdmin()">Profil</a>
-				</li>
-				<li>
-					<a href="#" (click)="openDownload()">Download</a>
-				</li>
-				<li>
-					<a href="#" (click)="logout()">Logout</a>
-				</li>
-			</ul>
-		</li>
-		<li *ngIf="!isAuthenticated">
-			<a href="#" (click)="openLogin()">Login</a>
-		</li>
 	</ul>
 </nav>
