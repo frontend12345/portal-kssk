@@ -66,6 +66,9 @@ export class CmsComponent implements OnInit {
             secretKey: ['', Validators.required]
         });
 		this.openContentByUrl();
+		if (localStorage.getItem("currentUser") === null) {
+		  this.isAuthenticated = true;
+		}
 	};
 	
 	public textOptions: Object = {
@@ -233,6 +236,7 @@ export class CmsComponent implements OnInit {
 				this.crudForm = this.formBuilder.group({
 					id: [''],
 					menuId: ['', Validators.required],
+					title: ['', Validators.required],
 					url: ['', Validators.required],
 					content: [''],
 					isActive: ['true', Validators.required]

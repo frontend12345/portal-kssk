@@ -26,7 +26,7 @@
 						<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
 					</li>
 					<li *ngIf="hasChildren(menu,itemRoot.id)" class="menu-has-children" id="bs-check-menu">
-						<a *ngIf="itemRoot.parentId===null" href="#" (click)="open(itemRoot)">{{itemRoot.title}}</a>
+						<a *ngIf="itemRoot.parentId===null" href="#">{{itemRoot.title}}</a>
 						<ul *ngIf="hasChildren(menu,itemRoot.id)">
 							<li *ngFor="let itemChild of menu">
 							<a *ngIf="itemChild.parentId===itemRoot.id" href="#" (click)="open(itemChild)">{{itemChild.title}}</a>
@@ -66,7 +66,7 @@
 							</div>
 						</div>
 						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">						
-							<div style="height: 600px !important;">
+							<div style="height: 400px !important;">
 								<slideshow [autoPlay]="true"
 										   [showArrows]="true"
 										   [imageUrls]="listSliderFile"
@@ -149,15 +149,15 @@
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='feature'">
 	<section class="banner-area relative" id="home">
 		<div class="overlay overlay-bg"></div>
+		<div style="height: 600px !important;padding-top: 100px">
+			<slideshow [autoPlay]="true"
+					   [showArrows]="true"
+					   [imageUrls]="sliderUrl"
+					   [lazyLoad]="sliderUrl?.length > 1"
+					   [autoPlayWaitForLazyLoad]="true">
+			</slideshow>
+		</div>
 		<div class="container">
-			<div style="height: 600px !important;padding-top: 100px">
-				<slideshow [autoPlay]="true"
-						   [showArrows]="true"
-						   [imageUrls]="sliderUrl"
-						   [lazyLoad]="sliderUrl?.length > 1"
-						   [autoPlayWaitForLazyLoad]="true">
-				</slideshow>
-			</div>
 			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;margin-top: -120px">
 				<div class="banner-content col-lg-9 col-md-12">
 					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a href="/mandat" class="primary-btn text-uppercase">Lebih lanjut</a>
@@ -168,7 +168,27 @@
 	<section class="feature-area">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8"><div class="single-feature"><div class="title"><h4>KSSK Feed</h4></div><div class="desc-wrap"><p>Siaran Pers KSSK 30 April 2018</p><a href="/pr">Selanjutnya</a></div></div></div>
+				<div class="col-lg-8">
+					<div class="single-feature">
+						<div class="title"><h4>KSSK Feed</h4></div>
+						<div class="desc-wrap">
+							<div class="row">
+								<div class="col-lg-4">
+									<div><h5>Siaran Pers</h5></div>
+									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/pr">Selanjutnya</a></div>
+								</div>
+								<div class="col-lg-4">		
+									<div><h5>Peraturan</h5></div>
+									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/peraturan">Selanjutnya</a></div>
+								</div>
+								<div class="col-lg-4">		
+									<div><h5>Rapat</h5></div>
+									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/rapat">Selanjutnya</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="col-lg-4"><div class="single-feature"><div class="title"><h4>News Feed</h4></div><div class="desc-wrap"><p>Awas Modus Penipuan Catut Nama Bank Indonesia<a href="https://www.liputan6.com/bisnis/read/3673430/awas-modus-penipuan-catut-nama-bank-indonesia"> Selanjutnya</a></p><p>Tarik Investasi, Sri Mulyani Siap Beri Insentif Tambahan<a href="https://www.liputan6.com/bisnis/read/3670700/tarik-investasi-sri-mulyani-siap-beri-insentif-tambahan"> Selanjutnya</a></p><p>Saham ke Publik<a href="https://www.liputan6.com/bisnis/read/3672350/ojk-bakal-atur-pelaku-ukm-yang-lepas-saham-ke-publik"> Selanjutnya</a></p></div></div></div>
 			</div>
 		</div>
@@ -472,7 +492,7 @@
 								<div class="mt-10">
 									<div>Menu</div>
 									<select formControlName="menuId">
-										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}} Tipe: {{menu.mode}}</option>
+										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}} ({{menu.mode}})</option>
 									</select>
 								</div>
 								<div class="mt-10">
@@ -613,8 +633,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-8 col-md-6 col-sm-6">
+		<div class="row">			
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="single-footer-widget">
+					<br>
+					<a href="/"><img src="assets/img/logo.png" alt="" title="" /></a>
+				</div>
+			</div>															
+			<div class="col-lg-9 col-md-9 col-sm-9">
 				<div class="single-footer-widget">
 					<br>
 					<h4>Kontak Kami</h4>
@@ -626,9 +652,7 @@
 					</ul>	
 					</font>
 				</div>
-			</div>																
-			<div class="col-lg-4 col-md-6 col-sm-6">
-			</div>												
+			</div>													
 		</div>
 		<div class="footer-bottom row align-items-center justify-content-between">
 			<p class="footer-text m-0 col-lg-8 col-md-12"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
