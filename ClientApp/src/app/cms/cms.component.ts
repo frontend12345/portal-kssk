@@ -9,6 +9,7 @@ import { NewsService } from '../services/news.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { IImage } from 'ng-simple-slideshow';
+import * as $ from 'jquery';// import Jquery here
 
 @Component({
 	selector: 'app-cms',
@@ -157,7 +158,9 @@ export class CmsComponent implements OnInit {
 		});
 	};
 	getLatestContentByUrl(url:string){	
-		let index = this.latestContent.findIndex(a => {return a.url == url;}); 
+		let index = this.latestContent.findIndex(a => {
+			a.url == url
+		}); 
 		if(index != -1){
 			return this.latestContent[index].title;
 		}
@@ -206,7 +209,7 @@ export class CmsComponent implements OnInit {
 		return menu.filter(a=>a.parentId===id).length>0;
 	};
 	open(item){
-		this.scrollToAnchor('anchor');
+		this.scrollToAnchor('anchor'); 
 		this.selectedMenu = item;
 		this.loadContent();
 	};
