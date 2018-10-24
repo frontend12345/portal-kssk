@@ -148,17 +148,18 @@
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='feature'">
 	<section class="banner-area relative" id="home">
-		<div class="overlay overlay-bg"></div>
-		<div style="height: 600px !important;padding-top: 100px">
-			<slideshow [autoPlay]="true"
-					   [showArrows]="true"
-					   [imageUrls]="sliderUrl"
-					   [lazyLoad]="sliderUrl?.length > 1"
-					   [autoPlayWaitForLazyLoad]="true">
-			</slideshow>
+		<div class="overlay overlay-bg">
+			<div style="height: 600px !important;padding-top: 100px">
+				<slideshow [autoPlay]="true"
+						   [showArrows]="true"
+						   [imageUrls]="sliderUrl"
+						   [lazyLoad]="sliderUrl?.length > 1"
+						   [autoPlayWaitForLazyLoad]="true">
+				</slideshow>
+			</div>
 		</div>
 		<div class="container">
-			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;margin-top: -120px">
+			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;">
 				<div class="banner-content col-lg-9 col-md-12">
 					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a href="/mandat" class="primary-btn text-uppercase">Lebih lanjut</a>
 				</div>
@@ -179,11 +180,11 @@
 								</div>
 								<div class="col-lg-4">		
 									<div><h5>Peraturan</h5></div>
-									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/peraturan">Selanjutnya</a></div>
+									<div><p>Keputusan KSSK 01 2017 Protokol Manajemen Krisis  KSSK</p><a href="/peraturan">Selanjutnya</a></div>
 								</div>
 								<div class="col-lg-4">		
 									<div><h5>Rapat</h5></div>
-									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/rapat">Selanjutnya</a></div>
+									<div><p>Rapat Berkala Komite Stabilitas Sistem Keuangan Triwulan II Tahun 2018</p><a href="/rapat">Selanjutnya</a></div>
 								</div>
 							</div>
 						</div>
@@ -432,6 +433,33 @@
 								</tr>
 								</tfoot>
 							</table>
+							</ng-container>						
+							<ng-container *ngIf="crud.title=='news'">
+							<table class="table table-hover table-sm" [mfData]="crud.data" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<thead class="thead-light">
+								<tr>
+									<th><mfDefaultSorter by="text">Text</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="url">Url</mfDefaultSorter></th>
+									<th colspan="2">Action</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr *ngFor="let item of mf.data">
+									<td>{{item.text}}</td>
+									<td>{{item.url}}</td>
+									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
+									<td><a href="#" (click)="delete(item.id)">Hapus</a></td>
+								</tr>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="4">
+										<br />
+										<mfBootstrapPaginator></mfBootstrapPaginator>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
 							</ng-container>
 						</div>
 						</ng-container>					
@@ -536,6 +564,24 @@
 										<option [value]="'Pengguna'">Pengguna</option>
 										<option [value]="'Admin'">Admin</option>
 									</select>
+								</div>
+								<div class="mt-10">
+									<div>
+										<a href="#" (click)="addUpdate()" class="primary-btn text-uppercase">Simpan</a>	atau 
+										<a href="#" (click)="backToCrud()" class="primary-btn text-uppercase">Batal</a>	
+									</div>
+								</div>
+							</form>
+							</ng-container>		
+							<ng-container *ngIf="crud.title=='news'">
+							<form [formGroup]="crudForm" (ngSubmit)="addUpdate()">
+								<div class="mt-10">
+									<div>Text</div>
+									<input type="text" class="form-control" formControlName="text" placeholder="Text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Text'">
+								</div>
+								<div class="mt-10">
+									<div>Url</div>
+									<input type="text" class="form-control" formControlName="url" placeholder="Url" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Url'">
 								</div>
 								<div class="mt-10">
 									<div>

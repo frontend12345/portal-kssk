@@ -270,6 +270,13 @@ export class CmsComponent implements OnInit {
 					authenticator: ['', Validators.required]
 				});
 			}
+			if(this.crud.title=="news"){
+				this.crudForm = this.formBuilder.group({
+					id: [''],
+					text: ['', Validators.required],
+					url: ['', Validators.required]
+				});
+			}
 		}
 	};
 	edit(id: number){
@@ -400,6 +407,12 @@ export class CmsComponent implements OnInit {
 				'authenticator': '123'
 			}
 		}
+		if(this.crud.title=="news"){
+			dataPost = {
+				'text': this.crudForm.value.text,
+				'url': this.crudForm.value.url
+			}
+		}
 		return dataPost;
 	};
 	setDataCrud(res: any){
@@ -451,6 +464,14 @@ export class CmsComponent implements OnInit {
 				'password': res.password,
 				'role': res.role,
 				'authenticator': res.authenticator
+			});
+			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
+		}
+		if(this.crud.title=="news"){
+			this.crud.data.push({
+				'id': res.id,
+				'text': res.text,
+				'url': res.url
 			});
 			this.crud.data = this.crud.data.sort((a, b) => a.id - b.id);
 		}
