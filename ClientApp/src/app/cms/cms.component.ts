@@ -157,7 +157,7 @@ export class CmsComponent implements OnInit {
 		});
 	};
 	getLatestContentByUrl(url:string){	
-		let index = this.latestContent.findIndex(a => return a.url == url); 
+		let index = this.latestContent.findIndex(a => {return a.url == url;}); 
 		if(index != -1){
 			return this.latestContent[index].title;
 		}

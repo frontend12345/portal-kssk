@@ -5,8 +5,8 @@
 					<div class="col-lg-4 col-sm-4 col-4 header-top-left no-padding">			
 					</div>
 					<div class="col-lg-8 col-sm-8 col-8 header-top-right no-padding">
-					<a href="/contactus"><span class="lnr lnr-phone"></span> <span class="text">ContactUs</span></a>	
-					<a href="/sitemap"><span class="lnr lnr-map"></span> <span class="text">Sitemap</span></a>	
+					<a href="#" (click)="openLatestContentByUrl('/contactus')"><span class="lnr lnr-phone"></span> <span class="text">ContactUs</span></a>	
+					<a href="#" (click)="openLatestContentByUrl('/sitemap')"><span class="lnr lnr-map"></span> <span class="text">Sitemap</span></a>	
 					<a href="#" *ngIf="!isAuthenticated" (click)="openLogin()">Login</a>
 					<a href="#" *ngIf="isAuthenticated" (click)="openAdmin()">Profil</a>
 					<a href="#" *ngIf="isAuthenticated" (click)="openDownload()">Download</a>
@@ -163,7 +163,7 @@
 		<div class="container">
 			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 700px;">
 				<div class="banner-content col-lg-9 col-md-12" style="background-color: rgba(4,9,30,0.4);padding-bottom: 20px;">
-					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a href="/mandat" class="primary-btn text-uppercase">Lebih lanjut</a>
+					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a (click)="openLatestContentByUrl('/mandat')" class="primary-btn text-uppercase">Lebih lanjut</a>
 				</div>
 			</div>
 		</div>
