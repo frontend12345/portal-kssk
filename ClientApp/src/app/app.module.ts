@@ -9,6 +9,7 @@ import { CmsComponent } from './cms/cms.component';
 import { SafePipe } from './cms/safe.pipe';
 import { DataService } from './services/data.service';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import {SlideshowModule} from 'ng-simple-slideshow';
 
 @NgModule({
 	declarations: [
@@ -26,7 +27,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 			{path: '**', component: CmsComponent }
 		]),
 		FroalaEditorModule.forRoot(), 
-		FroalaViewModule.forRoot()
+		FroalaViewModule.forRoot(),
+		SlideshowModule
 	],
 	providers: [DataService],
 	bootstrap: [

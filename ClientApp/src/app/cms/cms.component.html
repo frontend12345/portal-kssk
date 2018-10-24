@@ -19,9 +19,6 @@
 	</div>
 	<div class="container main-menu">
 		<div class="row align-items-center justify-content-between d-flex">
-			<div id="logo">
-				<a href="index.html"><img src="assets/img/logo.png" alt="" title="" /></a>
-			</div>
 			<nav id="nav-menu-container">
 				<ul class="nav-menu">
 					<ng-container *ngFor="let itemRoot of menu">
@@ -42,7 +39,7 @@
 		</div>
 	</div>
 </header><!-- #header -->
-<div *ngIf="contentPage=='portal' && selectedMenu.mode!='full'">
+<div *ngIf="contentPage=='portal' && selectedMenu.mode!='full' && selectedMenu.mode!='feature'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
 		<div class="container">				
@@ -65,18 +62,21 @@
 					
 						<div class="menu-content pb-70 col-lg-12">
 							<div class="title text-center">
-								<h1>{{cleanHtmlTags(currentContent?.content)}}</h1>
+								<h1>{{cleanHtmlTags(currentContent?.title)}}</h1>
 							</div>
 						</div>
-						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">
-							<div class="single-carusel row align-items-center" *ngFor="let file of listFile">
-								<div class="col-12 col-md-12 thumb">
-									<img class="img-fluid" src="assets/foto/{{file.filename}}" alt="">
-								</div>
-								<div class="detials col-12 col-md-6">
-									<div [innerHTML]="file.description | safeHtml"></div>
-								</div>
-							</div>																				
+						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">						
+							<div style="height: 600px !important;">
+								<slideshow [autoPlay]="true"
+										   [showArrows]="true"
+										   [imageUrls]="listSliderFile"
+										   [lazyLoad]="listSliderFile?.length > 1"
+										   [autoPlayWaitForLazyLoad]="true">
+								</slideshow>
+							</div>	
+							<div class="title justify-content-between" style="margin-top:20px">
+								<div [innerHTML]="currentContent?.content | safeHtml"></div>
+							</div>							
 						</div>
 						<div *ngIf="selectedMenu.mode=='multiplefile'" class="menu-content pb-70 col-lg-12">
 							<div class="pb-30" *ngFor="let file of listFile">
@@ -134,7 +134,7 @@
 							<h4>Daftar {{selectedMenu.title}}</h4>
 							<ul class="mt-10" *ngFor="let content of listContent;let i = index">
 								<li class="justify-content-between d-flex">
-									<a href="#" (click)="openContent(i)"><span>{{cleanHtmlTags(content.content)}}</span></a>
+									<a href="#" (click)="openContent(i)"><span>{{cleanHtmlTags(content.title)}}</span></a>
 								</li>														
 							</ul>
 						</div>													
@@ -146,6 +146,34 @@
 	</div>
 </div>
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='full'" [innerHTML]="contentText | safeHtml"></div>
+<div *ngIf="contentPage=='portal' && selectedMenu.mode=='feature'">
+	<section class="banner-area relative" id="home">
+		<div class="overlay overlay-bg"></div>
+		<div class="container">
+			<div style="height: 600px !important;padding-top: 100px">
+				<slideshow [autoPlay]="true"
+						   [showArrows]="true"
+						   [imageUrls]="sliderUrl"
+						   [lazyLoad]="sliderUrl?.length > 1"
+						   [autoPlayWaitForLazyLoad]="true">
+				</slideshow>
+			</div>
+			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;margin-top: -120px">
+				<div class="banner-content col-lg-9 col-md-12">
+					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a href="/mandat" class="primary-btn text-uppercase">Lebih lanjut</a>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="feature-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8"><div class="single-feature"><div class="title"><h4>KSSK Feed</h4></div><div class="desc-wrap"><p>Siaran Pers KSSK 30 April 2018</p><a href="/pr">Selanjutnya</a></div></div></div>
+				<div class="col-lg-4"><div class="single-feature"><div class="title"><h4>News Feed</h4></div><div class="desc-wrap"><p>Awas Modus Penipuan Catut Nama Bank Indonesia<a href="https://www.liputan6.com/bisnis/read/3673430/awas-modus-penipuan-catut-nama-bank-indonesia"> Selanjutnya</a></p><p>Tarik Investasi, Sri Mulyani Siap Beri Insentif Tambahan<a href="https://www.liputan6.com/bisnis/read/3670700/tarik-investasi-sri-mulyani-siap-beri-insentif-tambahan"> Selanjutnya</a></p><p>Saham ke Publik<a href="https://www.liputan6.com/bisnis/read/3672350/ojk-bakal-atur-pelaku-ukm-yang-lepas-saham-ke-publik"> Selanjutnya</a></p></div></div></div>
+			</div>
+		</div>
+	</section>
+</div>
 <div *ngIf="contentPage=='login'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
@@ -284,7 +312,7 @@
 								</tbody>
 								<tfoot>
 								<tr>
-									<td colspan="6">
+									<td colspan="8">
 										<br />
 										<mfBootstrapPaginator></mfBootstrapPaginator>
 									</td>
@@ -297,6 +325,7 @@
 								<thead class="thead-light">
 								<tr>
 									<th><mfDefaultSorter by="menuId">Menu</mfDefaultSorter></th>
+									<th><mfDefaultSorter by="title">Title</mfDefaultSorter></th>
 									<th><mfDefaultSorter by="content">Content</mfDefaultSorter></th>
 									<th><mfDefaultSorter by="isActive">Is Active</mfDefaultSorter></th>
 									<th colspan="2">Action</th>
@@ -305,6 +334,7 @@
 								<tbody>
 								<tr *ngFor="let item of mf.data">
 									<td>{{getTitle(tempData,item.menuId)}}</td>
+									<td>{{item.title}}</td>
 									<td>{{item.content}}</td>
 									<td>{{item.isActive}}</td>
 									<td><a href="#" (click)="edit(item.id)">Ubah</a></td>
@@ -346,7 +376,7 @@
 								</tbody>
 								<tfoot>
 								<tr>
-									<td colspan="6">
+									<td colspan="8">
 										<br />
 										<mfBootstrapPaginator></mfBootstrapPaginator>
 									</td>
@@ -412,8 +442,9 @@
 								<div class="mt-10">
 									<div>Mode</div>
 									<select formControlName="mode">
-										<option [value]="'single'">Single</option>
-										<option [value]="'full'">Full</option>
+										<option [value]="'single'">Single (HTML + Title)</option>
+										<option [value]="'full'">Full (All HTML)</option>
+										<option [value]="'feature'">Slider + News</option>
 										<option [value]="'multiplefoto'">Multiple Foto</option>
 										<option [value]="'multiplefile'">Multiple File</option>
 										<option [value]="'multiplefilesmall'">Multiple File Table</option>
@@ -441,8 +472,12 @@
 								<div class="mt-10">
 									<div>Menu</div>
 									<select formControlName="menuId">
-										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}}</option>
+										<option [value]="menu.id" *ngFor="let menu of tempData">{{menu.title}} Tipe: {{menu.mode}}</option>
 									</select>
+								</div>
+								<div class="mt-10">
+									<div>Title</div>
+									<input type="text" class="form-control" formControlName="title" placeholder="Title" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Title'">
 								</div>
 								<div class="mt-10">
 									<div>Content</div>
@@ -528,7 +563,7 @@
 						<div class="single-sidebar-widget newsletter-widget">
 							<h4 class="newsletter-title">Administrasi</h4>
 							<p>
-								<a href="#" *ngIf="user.role=='Admin'" (click)="openCrud('menu')">Menu</a>
+								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('menu')">Menu</a>
 							</p>
 							<p>
 								<a href="#" *ngIf="userLogin.role=='Admin'" (click)="openCrud('content')">Content</a>

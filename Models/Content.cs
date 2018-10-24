@@ -13,6 +13,7 @@ namespace Portal.Models
         public int Id { get; set; }
         public int MenuId { get; set; }
         public string Url { get; set; }
+        public string Title { get; set; }
         public string Content1 { get; set; }
         public bool? IsActive { get; set; }
         public DateTime CreatedDate { get; set; }

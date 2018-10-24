@@ -22,11 +22,12 @@ namespace Portal.Controllers
         {
 			dynamic result;
 			try{
-				if(type == "full"||type == "single"){
+				if(type == "full"||type == "single"||type == "feature"){
 					result = context.Content.Where(a=>a.Url==url && a.IsActive==true).Select(a=>new {
 						id = a.Id,
 						menuid = a.MenuId,
 						url = a.Url,
+						title = a.Title,
 						content = a.Content1,
 						isactive = a.IsActive
 					}).FirstOrDefault();
@@ -35,6 +36,7 @@ namespace Portal.Controllers
 						id = a.Id,
 						menuid = a.MenuId,
 						url = a.Url,
+						title = a.Title,
 						content = a.Content1,
 						isactive = a.IsActive
 					});
@@ -58,6 +60,7 @@ namespace Portal.Controllers
 					id = a.Id,
 					menuId = a.MenuId,
 					url = a.Url,
+					title = a.Title,
 					content = a.Content1,
 					isActive = a.IsActive
 				});

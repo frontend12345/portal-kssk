@@ -20,6 +20,7 @@ namespace Portal.Models
         public virtual DbSet<SecureFiles> SecureFiles { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<News> News { get; set; }
 		
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,6 +39,11 @@ namespace Portal.Models
         {
             modelBuilder.Entity<Content>(entity =>
             {
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+					
                 entity.Property(e => e.Content1)
                     .HasColumnName("Content")
                     .HasMaxLength(5000)
@@ -154,6 +160,23 @@ namespace Portal.Models
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<News>(entity =>
+            {
+                entity.Property(e => e.Text)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+					
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
             });
         }
     }

@@ -7,6 +7,7 @@ import { DataService } from '../services/data.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { IImage } from 'ng-simple-slideshow';
 
 @Component({
 	selector: 'app-cms',
@@ -24,7 +25,7 @@ export class CmsComponent implements OnInit {
 	errors: string;
 	
 	// for menu & content
-	selectedMenu: any = JSON.parse('{"id":1,"parentId":null,"title":"Beranda","isActive":true,"order":0,"url":"home","mode":"full"}');
+	selectedMenu: any = JSON.parse('{"id":1,"parentId":null,"title":"Beranda","isActive":true,"order":0,"url":"home","mode":"feature"}');
 	menu: any[] = [];
 	contentText: string;
 	currentContent: any;
@@ -33,6 +34,8 @@ export class CmsComponent implements OnInit {
 	listFile: any[] = [];
 	listSecureFile: any[] = [];
 	href: string;
+	sliderUrl: (string | IImage)[] = ['assets/img/slider1.jpg','assets/img/slider2.jpg'];
+	listSliderFile: (string | IImage)[] = [];
 	
 	// for form
 	contentPage: string;
@@ -92,7 +95,7 @@ export class CmsComponent implements OnInit {
 	// loading content
 	loadContent(){
 		this.contentService.getContentByType(this.selectedMenu.url,this.selectedMenu.mode).subscribe(result => {
-			if(this.selectedMenu.mode=="single" || this.selectedMenu.mode=="full"){
+			if(this.selectedMenu.mode=="single" || this.selectedMenu.mode=="full" || this.selectedMenu.mode=="feature"){
 				this.contentText = result.content;
 			}else{
 				if(result.length>0){
@@ -100,8 +103,10 @@ export class CmsComponent implements OnInit {
 					this.currentContent = result[0];
 					this.currentContentIndex = 0;
 					this.listFile = [];
+					this.listSliderFile = [];
 					this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 						this.listFile = resultFile;
+						this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
 					});
 				}
 			}
@@ -130,8 +135,10 @@ export class CmsComponent implements OnInit {
 			this.currentContentIndex = this.currentContentIndex - 1;
 			this.currentContent = this.listContent[this.currentContentIndex];
 			this.listFile = [];
+			this.listSliderFile = [];
 			this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 				this.listFile = resultFile;
+				this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
 			});
 		}
 	};	
@@ -140,8 +147,10 @@ export class CmsComponent implements OnInit {
 			this.currentContentIndex = this.currentContentIndex + 1;
 			this.currentContent = this.listContent[this.currentContentIndex];
 			this.listFile = [];
+			this.listSliderFile = [];
 			this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 				this.listFile = resultFile;
+				this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
 			});
 		}
 	};	
@@ -149,8 +158,10 @@ export class CmsComponent implements OnInit {
 		this.currentContent = this.listContent[index];
 		this.currentContentIndex = index;
 		this.listFile = [];
+		this.listSliderFile = [];
 		this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 			this.listFile = resultFile;
+			this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
 		});
 	};
 	hasChildren(menu:any[],id) {
@@ -355,6 +366,7 @@ export class CmsComponent implements OnInit {
 			dataPost = {
 				'menuId': this.crudForm.value.menuId,
 				'url': this.getUrl(this.tempData,this.crudForm.value.menuId),
+				'title': this.crudForm.value.title,
 				'content1': this.crudForm.value.content,
 				'isActive': this.crudForm.value.isActive
 			}
@@ -403,6 +415,7 @@ export class CmsComponent implements OnInit {
 				'id': res.id,
 				'menuId': res.menuId,
 				'url': res.url,
+				'title': res.title,
 				'content': res.content1,
 				'isActive': res.isActive
 			});
