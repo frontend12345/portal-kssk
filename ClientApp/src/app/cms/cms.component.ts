@@ -5,6 +5,7 @@ import { ContentService } from '../services/content.service';
 import { FileService } from '../services/file.service';
 import { DataService } from '../services/data.service';
 import { UserService } from '../services/user.service';
+import { NewsService } from '../services/news.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { IImage } from 'ng-simple-slideshow';
@@ -13,7 +14,7 @@ import { IImage } from 'ng-simple-slideshow';
 	selector: 'app-cms',
 	templateUrl: './cms.component.html',
 	styleUrls: ['./cms.component.css'],
-	providers: [MenuService,ContentService,FileService,DataService,UserService, FormBuilder]
+	providers: [MenuService,ContentService,FileService,DataService,UserService, NewsService, FormBuilder]
 })
 export class CmsComponent implements OnInit {
     loginForm: FormGroup;
@@ -36,6 +37,7 @@ export class CmsComponent implements OnInit {
 	href: string;
 	sliderUrl: (string | IImage)[] = ['assets/img/slider1.jpg','assets/img/slider2.jpg'];
 	listSliderFile: (string | IImage)[] = [];
+	listNews: any[] = [];
 	
 	// for form
 	contentPage: string;
@@ -50,6 +52,7 @@ export class CmsComponent implements OnInit {
 		private contentService: ContentService,
 		private fileService: FileService,
 		private userService: UserService,
+		private newsService: NewsService,
         private formBuilder: FormBuilder
 	) {
 		this.href = location.pathname;
@@ -82,6 +85,9 @@ export class CmsComponent implements OnInit {
 	// for loading data
 	loadData() {
 		this.menuService.getLoadData().subscribe(result => {
+		});	
+		this.newsService.getNews().subscribe(result => {
+			this.listNews = result;
 		});	
 	};
 

@@ -28,6 +28,23 @@ namespace Portal.Controllers
 		}
 		
 		// GET: api/News
+        [HttpGet("last")]
+        public IActionResult GetNewsLast()
+        {
+			dynamic result;
+			try{
+				result = context.News.OrderByDescending(a=>a.CreatedDate).Select(a=>new {
+					id = a.Id,
+					url = a.Url,
+					text = a.Text
+				}).Take(3);
+			}catch(Exception ex){
+				return BadRequest(ex.Message);
+			}
+			return Ok(result);
+        }
+		
+		// GET: api/News
 		[HttpGet]
 		[Authorize]
         public IActionResult GetNews()
