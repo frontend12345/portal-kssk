@@ -48,6 +48,25 @@ namespace Portal.Controllers
 			}
 			return Ok(result);
         }
+
+        [HttpGet("latest/{url}")]		
+        public IActionResult GetLatestContentByUrl(string url)
+        {
+			dynamic result;
+			try{
+				result = context.Content.Where(a=>a.Url==url).OrderByDescending(a=>a.Id).Select(a=>new {
+					id = a.Id,
+					menuid = a.MenuId,
+					url = a.Url,
+					title = a.Title,
+					content = a.Content1,
+					isactive = a.IsActive
+				}).FirstOrDefault();
+			}catch(Exception ex){
+				return BadRequest(ex.Message);
+			}
+			return Ok(result);
+        }
 		
 		// GET: api/Content
 		[HttpGet]

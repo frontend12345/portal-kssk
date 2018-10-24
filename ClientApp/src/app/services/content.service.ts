@@ -9,4 +9,8 @@ export class ContentService {
   getContentByType(url: string,type: string) {
     return this.http.get<any>("/api/Content/"+url+"/"+type); 
   }
+
+  getLatestContentByUrl(url: string) {
+    return this.http.get<any>("/api/Content/latest/"+url); 
+  }
 }

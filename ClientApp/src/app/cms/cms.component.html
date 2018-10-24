@@ -5,8 +5,6 @@
 					<div class="col-lg-4 col-sm-4 col-4 header-top-left no-padding">			
 					</div>
 					<div class="col-lg-8 col-sm-8 col-8 header-top-right no-padding">
-					<a href="tel:+62 21 350 3504"><span class="lnr lnr-phone-handset"></span> <span class="text"> (021) 350 3504</span></a>
-					<a href="mailto:sekretariat@kssk.go.id"><span class="lnr lnr-envelope"></span> <span class="text">sekretariatkssk@kssk.go.id</span></a>	
 					<a href="/contactus"><span class="lnr lnr-phone"></span> <span class="text">ContactUs</span></a>	
 					<a href="/sitemap"><span class="lnr lnr-map"></span> <span class="text">Sitemap</span></a>	
 					<a href="#" *ngIf="!isAuthenticated" (click)="openLogin()">Login</a>
@@ -42,6 +40,7 @@
 		</div>
 	</div>
 </header><!-- #header -->
+<a name="anchor"></a>
 <div *ngIf="contentPage=='portal' && selectedMenu.mode!='full' && selectedMenu.mode!='feature'">
 	<section class="banner-area relative about-banner" id="home">	
 		<div class="overlay overlay-bg"></div>
@@ -152,7 +151,7 @@
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='feature'">
 	<section class="banner-area relative" id="home">
 		<div class="overlay overlay-bg">
-			<div style="height: 600px !important;padding-top: 163px">
+			<div style="height: 700px !important;padding-top: 163px">
 				<slideshow [autoPlay]="true"
 						   [showArrows]="true"
 						   [imageUrls]="sliderUrl"
@@ -174,20 +173,20 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="single-feature">
-						<div class="title"><h4>KSSK Feed</h4></div>
-						<div class="desc-wrap">
+						<div class="title"><h4>Info Terkini</h4></div>
+						<div class="desc-wrap" style="text-align: left;">
 							<div class="row">
 								<div class="col-lg-4">
 									<div><h5>Siaran Pers</h5></div>
-									<div><p>Siaran Pers KSSK 30 April 2018</p><a href="/pr">Selanjutnya</a></div>
+									<div><p>{{getLatestContentByUrl('pr')}}</p><a (click)="openLatestContentByUrl('/pr')">Selanjutnya</a></div>
 								</div>
 								<div class="col-lg-4">		
 									<div><h5>Peraturan</h5></div>
-									<div><p>Keputusan KSSK 01 2017 Protokol Manajemen Krisis  KSSK</p><a href="/peraturan">Selanjutnya</a></div>
+									<div><p>{{getLatestContentByUrl('peraturan')}}</p><a (click)="openLatestContentByUrl('/peraturan')">Selanjutnya</a></div>
 								</div>
 								<div class="col-lg-4">		
 									<div><h5>Rapat</h5></div>
-									<div><p>Rapat Berkala Komite Stabilitas Sistem Keuangan Triwulan II Tahun 2018</p><a href="/rapat">Selanjutnya</a></div>
+									<div><p>{{getLatestContentByUrl('rapat')}}</p><a (click)="openLatestContentByUrl('/rapat')">Selanjutnya</a></div>
 								</div>
 							</div>
 						</div>
@@ -196,9 +195,9 @@
 				<div class="col-lg-4">
 					<div class="single-feature">
 						<div class="title"><h4>News Feed</h4></div>
-						<div class="desc-wrap">
+						<div class="desc-wrap" style="text-align: left;">
 							<ng-container *ngFor="let news of listNews">
-							<p>{{news.text}}<a href="{{news.Url}}"> Selanjutnya</a></p>
+							<p>{{news.text}}<a href="{{news.url}}"> Selanjutnya</a></p>
 							</ng-container>
 						</div>
 					</div>
@@ -719,7 +718,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> KOMIT
 	</div>
 </footer>	
 <!-- End footer Area -->
-
 <nav id="mobile-nav">
 	<ul style="touch-action: pan-y;" >
 		<ng-container *ngFor="let itemRoot of menu">

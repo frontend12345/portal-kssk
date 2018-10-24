@@ -38,6 +38,7 @@ export class CmsComponent implements OnInit {
 	sliderUrl: (string | IImage)[] = ['assets/img/slider1.jpg','assets/img/slider2.jpg'];
 	listSliderFile: (string | IImage)[] = [];
 	listNews: any[] = [];
+	latestContent: any[] = [];
 	
 	// for form
 	contentPage: string;
@@ -69,7 +70,7 @@ export class CmsComponent implements OnInit {
             secretKey: ['', Validators.required]
         });
 		this.openContentByUrl();
-		if (localStorage.getItem("currentUser") === null) {
+		if (localStorage.getItem("currentUser") != null) {
 		  this.isAuthenticated = true;
 		}
 	};
@@ -89,6 +90,21 @@ export class CmsComponent implements OnInit {
 		this.newsService.getNews().subscribe(result => {
 			this.listNews = result;
 		});	
+		this.contentService.getLatestContentByUrl('pr').subscribe(result => {
+			if(result!=null){
+				this.latestContent.push(result);
+			}
+		});
+		this.contentService.getLatestContentByUrl('peraturan').subscribe(result => {
+			if(result!=null){
+				this.latestContent.push(result);
+			}
+		});
+		this.contentService.getLatestContentByUrl('rapat').subscribe(result => {
+			if(result!=null){
+				this.latestContent.push({'url':result.url,'title':result.title});
+			}
+		});
 	};
 
 	// loading menu
@@ -132,7 +148,20 @@ export class CmsComponent implements OnInit {
 				}
 			});	
 		}
-	}
+	};
+	openLatestContentByUrl(url:string){
+		this.menuService.getMenuByUrl(url).subscribe(result => {
+			if(result!=null){
+				this.open(result);
+			}
+		});
+	};
+	getLatestContentByUrl(url:string){	
+		let index = this.latestContent.findIndex(a => return a.url == url);
+		if(index != -1){
+			return this.latestContent[index].title;
+		}
+	};
 	hasPrevContent(){
 		return (this.currentContentIndex-1)>=0;
 	};	
@@ -177,8 +206,13 @@ export class CmsComponent implements OnInit {
 		return menu.filter(a=>a.parentId===id).length>0;
 	};
 	open(item){
+		this.scrollToAnchor('anchor');
 		this.selectedMenu = item;
 		this.loadContent();
+	};
+	scrollToAnchor(aid) {
+		var aTag = $("a[name='" + aid + "']");
+		$('html,body').animate({ scrollTop: aTag.offset().top }, 'slow');
 	};
 
 	// for navigation
