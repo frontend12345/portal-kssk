@@ -36,7 +36,7 @@ export class CmsComponent implements OnInit {
 	listFile: any[] = [];
 	listSecureFile: any[] = [];
 	href: string;
-	sliderUrl: (string | IImage)[] = ['assets/img/slider1.jpg','assets/img/slider2.jpg'];
+	sliderUrl: (string | IImage)[] = [{url:'assets/img/slider1.jpg',caption:'Press Conference Rapat Berkala KSSK Triwulan I Tahun 2018'},{url:'assets/img/slider2.jpg',caption:'Rapat Berkala KSSK Triwulan II Tahun 2018'}];
 	listSliderFile: (string | IImage)[] = [];
 	listNews: any[] = [];
 	latestContent: any[] = [];
