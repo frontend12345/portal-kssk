@@ -54,8 +54,8 @@
 			</div>
 		</div>
 	</section>
-	<div *ngIf="selectedMenu.mode=='single'" [innerHTML]="contentText | safeHtml"></div>		
-	<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile' || selectedMenu.mode=='multiplefilesmall'">				
+	<div *ngIf="selectedMenu.mode=='single'" [innerHTML]="contentText | safeHtml" style="text-align: justify;"></div>		
+	<div *ngIf="selectedMenu.mode=='multiplefoto' || selectedMenu.mode=='multiplefile' || selectedMenu.mode=='multiplefilesmall'" style="text-align: justify;">				
 		<!-- Start event-details Area -->
 		<section class="event-details-area section-gap">
 			<div class="container">
@@ -180,7 +180,7 @@
 				<div class="col-lg-4">
 					<div class="single-feature">
 						<div class="title" style="text-align: left;"><h4>NEWS FEED</h4></div>
-						<div class="desc-wrap" style="text-align: left;">
+						<div class="desc-wrap" style="text-align: justify;">
 							<ng-container *ngFor="let news of listNews">
 							<p>{{news.text}}<a href="{{news.url}}"> Selanjutnya</a></p>
 							</ng-container>
