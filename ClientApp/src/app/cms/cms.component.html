@@ -166,7 +166,7 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="single-feature">
-						<div class="title"><h4>Info Terkini</h4></div>
+						<div class="title" style="text-align: left;"><h4>INFO TERKINI</h4></div>
 						<div class="desc-wrap" style="text-align: left;">
 							<h5>Siaran Pers</h5>
 							<p>{{getLatestContentByUrl('pr')}}<a (click)="openLatestContentByUrl('/pr')"> Selanjutnya</a></p>
@@ -179,7 +179,7 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="single-feature">
-						<div class="title"><h4>News Feed</h4></div>
+						<div class="title" style="text-align: left;"><h4>NEWS FEED</h4></div>
 						<div class="desc-wrap" style="text-align: left;">
 							<ng-container *ngFor="let news of listNews">
 							<p>{{news.text}}<a href="{{news.url}}"> Selanjutnya</a></p>
