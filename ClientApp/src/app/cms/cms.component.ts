@@ -78,9 +78,6 @@ export class CmsComponent implements OnInit {
             secretKey: ['', Validators.required]
         });
 		this.openContentByUrl();
-		if (localStorage.getItem("currentUser") != null) {
-		  this.isAuthenticated = true;
-		}
 		this.galleryOptions = [
             {
                 width: '600px',
