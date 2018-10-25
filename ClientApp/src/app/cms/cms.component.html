@@ -67,15 +67,9 @@
 								<h1>{{cleanHtmlTags(currentContent?.title)}}</h1>
 							</div>
 						</div>
-						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">						
-							<div style="height: 400px !important;">
-								<slideshow [autoPlay]="true"
-										   [showArrows]="true"
-										   [imageUrls]="listSliderFile"
-										   [lazyLoad]="listSliderFile?.length > 1"
-										   [autoPlayWaitForLazyLoad]="true">
-								</slideshow>
-							</div>	
+						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">	
+							<ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+	
 							<div class="title justify-content-between" style="margin-top:20px">
 								<div [innerHTML]="currentContent?.content | safeHtml"></div>
 							</div>							
@@ -152,19 +146,18 @@
 	<section class="banner-area relative" id="home">
 		<div class="overlay overlay-bg">
 		</div>
-				<div style="height: 700px !important;padding-top: 163px;margin-bottom: -100px;">
-					<slideshow [autoPlay]="true"
-							   [showArrows]="true"
-							   [imageUrls]="sliderUrl"
-							   [lazyLoad]="sliderUrl?.length > 1"
-							   [autoPlayWaitForLazyLoad]="true">
-					</slideshow>
-				</div>
+		<div style="height: 700px !important;padding-top: 163px;margin-bottom: -100px;">
+			<slideshow [autoPlay]="true"
+					   [showArrows]="true"
+					   [imageUrls]="sliderUrl"
+					   [lazyLoad]="sliderUrl?.length > 1"
+					   [autoPlayWaitForLazyLoad]="true"
+					   [captionBackground]="captionBackground"
+					   [captionColor]="captionColor">
+			</slideshow>
+		</div>
 		<div class="container">
-			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;">
-				<div class="banner-content col-lg-9 col-md-12" style="background-color: rgba(4,9,30,0.4);padding-bottom: 20px;">
-					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a (click)="openLatestContentByUrl('/mandat')" class="primary-btn text-uppercase">Lebih lanjut</a>
-				</div>
+			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 100px;">
 			</div>
 		</div>
 	</section>

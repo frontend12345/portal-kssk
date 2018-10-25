@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { IImage } from 'ng-simple-slideshow';
 import * as $ from 'jquery';// import Jquery here
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
 
 @Component({
 	selector: 'app-cms',
@@ -36,8 +37,6 @@ export class CmsComponent implements OnInit {
 	listFile: any[] = [];
 	listSecureFile: any[] = [];
 	href: string;
-	sliderUrl: (string | IImage)[] = [{url:'assets/img/slider1.jpg',caption:'Press Conference Rapat Berkala KSSK Triwulan I Tahun 2018'},{url:'assets/img/slider2.jpg',caption:'Rapat Berkala KSSK Triwulan II Tahun 2018'}];
-	listSliderFile: (string | IImage)[] = [];
 	listNews: any[] = [];
 	latestContent: any[] = [];
 	
@@ -46,6 +45,14 @@ export class CmsComponent implements OnInit {
 	crud:any = JSON.parse('{"title":"", "data":""}');
 	tempData: any[];
 	fileList: FileList;
+	
+	// for gallery
+	sliderUrl: (string | IImage)[] = [{url:'assets/img/slider1.jpg',caption:'<center><font size="5">Press Conference Rapat Berkala KSSK Triwulan I Tahun 2018</font></center>'},{url:'assets/img/slider2.jpg',caption:'<center><font size="5">Rapat Berkala KSSK Triwulan II Tahun 2018</font></center>'}];
+	listSliderFile: (string | IImage)[] = [];
+	captionBackground: string = 'rgba(47, 84, 150, 0.9)';
+	captionColor: string = '#FFF';
+	galleryOptions: NgxGalleryOptions[];
+    galleryImages: NgxGalleryImage[];
 	
 	constructor(
 		private router: Router,
@@ -74,6 +81,32 @@ export class CmsComponent implements OnInit {
 		if (localStorage.getItem("currentUser") != null) {
 		  this.isAuthenticated = true;
 		}
+		this.galleryOptions = [
+            {
+                width: '600px',
+                height: '400px',
+                thumbnailsColumns: 4,
+                imageAnimation: NgxGalleryAnimation.Slide
+            },
+            // max-width 800
+            {
+                breakpoint: 800,
+                width: '100%',
+                height: '600px',
+                imagePercent: 80,
+                thumbnailsPercent: 20,
+                thumbnailsMargin: 20,
+                thumbnailMargin: 20
+            },
+            // max-width 400
+            {
+                breakpoint: 400,
+                preview: false
+            },
+			{ "image": false, "height": "100px" },
+			{ "breakpoint": 500, "width": "100%" }
+        ];
+		this.galleryImages = [];
 	};
 	
 	public textOptions: Object = {
@@ -130,9 +163,16 @@ export class CmsComponent implements OnInit {
 					this.currentContentIndex = 0;
 					this.listFile = [];
 					this.listSliderFile = [];
+					this.galleryImages = [];
+					var images = {};
 					this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 						this.listFile = resultFile;
 						this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
+						for(var i = 0; i<resultFile.length;i++){
+						var res = "{\"small\":\"assets/foto/"+resultFile[i].filename+"\",\"medium\":\"assets/foto/"+resultFile[i].filename+"\",\"big\":\"assets/foto/"+resultFile[i].filename+"\"}";
+						images = JSON.parse(res);
+						this.galleryImages.push(images);
+						}
 					});
 				}
 			}
@@ -177,9 +217,16 @@ export class CmsComponent implements OnInit {
 			this.currentContent = this.listContent[this.currentContentIndex];
 			this.listFile = [];
 			this.listSliderFile = [];
+			this.galleryImages = [];
+			var images = {};
 			this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 				this.listFile = resultFile;
 				this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
+				for(var i = 0; i<resultFile.length;i++){
+				var res = "{\"small\":\"assets/foto/"+resultFile[i].filename+"\",\"medium\":\"assets/foto/"+resultFile[i].filename+"\",\"big\":\"assets/foto/"+resultFile[i].filename+"\"}";
+				images = JSON.parse(res);
+				this.galleryImages.push(images);
+				}
 			});
 		}
 	};	
@@ -189,9 +236,16 @@ export class CmsComponent implements OnInit {
 			this.currentContent = this.listContent[this.currentContentIndex];
 			this.listFile = [];
 			this.listSliderFile = [];
+			this.galleryImages = [];
+			var images = {};
 			this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 				this.listFile = resultFile;
 				this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
+				for(var i = 0; i<resultFile.length;i++){
+				var res = "{\"small\":\"assets/foto/"+resultFile[i].filename+"\",\"medium\":\"assets/foto/"+resultFile[i].filename+"\",\"big\":\"assets/foto/"+resultFile[i].filename+"\"}";
+				images = JSON.parse(res);
+				this.galleryImages.push(images);
+				}
 			});
 		}
 	};	
@@ -200,9 +254,16 @@ export class CmsComponent implements OnInit {
 		this.currentContentIndex = index;
 		this.listFile = [];
 		this.listSliderFile = [];
+		this.galleryImages = [];
+		var images = {};
 		this.fileService.getFileByContent(this.currentContent.id).subscribe(resultFile => {					
 			this.listFile = resultFile;
 			this.listSliderFile = resultFile.map(a=>"assets/foto/"+a.filename);
+			for(var i = 0; i<resultFile.length;i++){
+			var res = "{\"small\":\"assets/foto/"+resultFile[i].filename+"\",\"medium\":\"assets/foto/"+resultFile[i].filename+"\",\"big\":\"assets/foto/"+resultFile[i].filename+"\"}";
+			images = JSON.parse(res);
+			this.galleryImages.push(images);
+			}
 		});
 	};
 	hasChildren(menu:any[],id) {
