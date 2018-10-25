@@ -79,33 +79,38 @@
 	</section>	    		    			
 	<!-- start footer Area -->		
 	<footer class="footer-area">
-		<div style="background-color: #f5f6f7;padding: 30px 0;">
-			<div class="row">
-				<div class="col-lg-3 col-md-3 col-sm-3">
-					<div class="single-footer-widget">
-						<img src="assets/img/logo_bi.png" height="80" alt="" title="Bank Indonesia"  style="margin-left:auto;margin-right:auto;display:block"/>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-3">
-					<div class="single-footer-widget">
-						<img src="assets/img/logo_ojk.png" height="80" alt="" title="Otoritas Jasa Keuangan"  style="margin-left:auto;margin-right:auto;display:block"/>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-3">
-					<div class="single-footer-widget">
-						<img src="assets/img/logo_lps.png" height="80" alt="" title="Lembaga Penjamin Simpanan"  style="margin-left:auto;margin-right:auto;display:block"/>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-3 col-sm-3">
-					<div class="single-footer-widget">
-						<img src="assets/img/logo_kemenkeu.png" height="80" alt="" title="Kementerian Keuangan"  style="margin-left:auto;margin-right:auto;display:block"/>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="container">
+		<div class="container"> 
 			<div class="row">																
-				<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="col-lg-3 col-md-3 col-sm-3">
+					<div class="single-footer-widget">
+						<br>
+						<h4>Tentang KSSK</h4>
+						<font color="white">
+							<ul>
+							<ng-container *ngFor="let itemChild of menu">
+								<li *ngIf="itemChild.parentId==2">
+									<a href="#" (click)="open(itemChild)">{{itemChild.title}}</a>
+								</li>
+							</ng-container>
+							</ul>
+						</font>
+					</div>
+				</div>																
+				<div class="col-lg-3 col-md-3 col-sm-3">
+					<div class="single-footer-widget">
+						<br>
+						<h4>Situs Terkait</h4>
+						<font color="white">
+						<ul>
+							<li><a href="http://www.bi.go.id">Bank Indonesia</a></li>
+							<li><a href="http://www.ojk.go.id">Otoritas Jasa Keuangan</a></li>
+							<li><a href="http://www.lps.go.id">Lembaga Penjamin Simpanan</a></li>
+							<li><a href="http://www.kemenkeu.goid">Kementerian Keuangan</a></li>
+						</ul>	
+						</font>
+					</div>
+				</div>																
+				<div class="col-lg-6 col-md-6 col-sm-6">
 					<div class="single-footer-widget">
 						<br>
 						<h4>Kontak Kami</h4>
