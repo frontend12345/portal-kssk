@@ -151,44 +151,36 @@
 <div *ngIf="contentPage=='portal' && selectedMenu.mode=='feature'">
 	<section class="banner-area relative" id="home">
 		<div class="overlay overlay-bg">
-			<div style="height: 700px !important;padding-top: 163px">
-				<slideshow [autoPlay]="true"
-						   [showArrows]="true"
-						   [imageUrls]="sliderUrl"
-						   [lazyLoad]="sliderUrl?.length > 1"
-						   [autoPlayWaitForLazyLoad]="true">
-				</slideshow>
-			</div>
 		</div>
+				<div style="height: 700px !important;padding-top: 163px;margin-bottom: -100px;">
+					<slideshow [autoPlay]="true"
+							   [showArrows]="true"
+							   [imageUrls]="sliderUrl"
+							   [lazyLoad]="sliderUrl?.length > 1"
+							   [autoPlayWaitForLazyLoad]="true">
+					</slideshow>
+				</div>
 		<div class="container">
-			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 700px;">
+			<div class="row fullscreen d-flex align-items-center justify-content-between" style="height: 600px;">
 				<div class="banner-content col-lg-9 col-md-12" style="background-color: rgba(4,9,30,0.4);padding-bottom: 20px;">
 					<h1 class="text-uppercase">mendukung dan menjaga stabilitas sektor dan institusi keuangan</h1><p class="pt-10 pb-10" style="color:white">Sekretariat KSSK memiliki fungsi dukungan dan fasilitasi Komite Stabilitas Sistem Keuangan dalam bentuk kajian dan assesment; koordinasi penyusunan kebijakan dan regulatory setting serta kajian manajemen risiko dan hukum..</p><a (click)="openLatestContentByUrl('/mandat')" class="primary-btn text-uppercase">Lebih lanjut</a>
 				</div>
 			</div>
 		</div>
 	</section>
-	<section class="feature-area">
+	<section>
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="single-feature">
 						<div class="title"><h4>Info Terkini</h4></div>
 						<div class="desc-wrap" style="text-align: left;">
-							<div class="row">
-								<div class="col-lg-4">
-									<div><h5>Siaran Pers</h5></div>
-									<div><p>{{getLatestContentByUrl('pr')}}</p><a (click)="openLatestContentByUrl('/pr')">Selanjutnya</a></div>
-								</div>
-								<div class="col-lg-4">		
-									<div><h5>Peraturan</h5></div>
-									<div><p>{{getLatestContentByUrl('peraturan')}}</p><a (click)="openLatestContentByUrl('/peraturan')">Selanjutnya</a></div>
-								</div>
-								<div class="col-lg-4">		
-									<div><h5>Rapat</h5></div>
-									<div><p>{{getLatestContentByUrl('rapat')}}</p><a (click)="openLatestContentByUrl('/rapat')">Selanjutnya</a></div>
-								</div>
-							</div>
+							<h5>Siaran Pers</h5>
+							<p>{{getLatestContentByUrl('pr')}}<a (click)="openLatestContentByUrl('/pr')"> Selanjutnya</a></p>
+							<h5>Peraturan</h5>
+							<p>{{getLatestContentByUrl('peraturan')}}<a (click)="openLatestContentByUrl('/peraturan')"> Selanjutnya</a></p>
+							<h5>Rapat</h5>
+							<p>{{getLatestContentByUrl('rapat')}}<a (click)="openLatestContentByUrl('/rapat')"> Selanjutnya</a></p>					
 						</div>
 					</div>
 				</div>
