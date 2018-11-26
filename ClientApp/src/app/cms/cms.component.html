@@ -5,12 +5,12 @@
 					<div class="col-lg-4 col-sm-4 col-4 header-top-left no-padding">			
 					</div>
 					<div class="col-lg-8 col-sm-8 col-8 header-top-right no-padding">
-					<a href="#" (click)="openLatestContentByUrl('/contactus')"><span class="lnr lnr-phone"></span> <span class="text">ContactUs</span></a>	
-					<a href="#" (click)="openLatestContentByUrl('/sitemap')"><span class="lnr lnr-map"></span> <span class="text">Sitemap</span></a>	
-					<a href="#" *ngIf="!isAuthenticated" (click)="openLogin()">Login</a>
+					<a href="#" (click)="openLatestContentByUrl('/contactus')"><span class="lnr lnr-phone"></span> <span class="text">Hubungi Kami</span></a>	
+					<a href="#" (click)="openLatestContentByUrl('/sitemap')"><span class="lnr lnr-map"></span> <span class="text">Peta Situs</span></a>	
+					<a href="#" *ngIf="!isAuthenticated" (click)="openLogin()">Masuk</a>
 					<a href="#" *ngIf="isAuthenticated" (click)="openAdmin()">Profil</a>
 					<a href="#" *ngIf="isAuthenticated" (click)="openDownload()">Download</a>
-					<a href="#" *ngIf="isAuthenticated" (click)="logout()">Logout</a>
+					<a href="#" *ngIf="isAuthenticated" (click)="logout()">Keluar</a>
 				</div>
 			</div>			  					
 		</div>
@@ -68,7 +68,9 @@
 							</div>
 						</div>
 						<div *ngIf="selectedMenu.mode=='multiplefoto'" class="active-upcoming-event-carusel">	
+							<div class="img-judul" style="width:auto;">
 							<ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+							</div>
 	
 							<div class="title justify-content-between" style="margin-top:20px">
 								<div [innerHTML]="currentContent?.content | safeHtml"></div>
@@ -166,7 +168,8 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="single-feature">
-						<div class="title" style="text-align: left;"><h4>INFO TERKINI</h4></div>
+						<div class="title" style="text-align: left;
+    padding-left: 20px;"><h4>INFO TERKINI</h4></div>
 						<div class="desc-wrap" style="text-align: left;">
 							<h5>Siaran Pers</h5>
 							<p>{{getLatestContentByUrl('pr')}}<a (click)="openLatestContentByUrl('/pr')"> Selanjutnya</a></p>
@@ -179,7 +182,8 @@
 				</div>
 				<div class="col-lg-4">
 					<div class="single-feature">
-						<div class="title" style="text-align: left;"><h4>NEWS FEED</h4></div>
+						<div class="title" style="text-align: left;
+    padding-left: 20px;"><h4>NEWS FEED</h4></div>
 						<div class="desc-wrap" style="text-align: justify;">
 							<ng-container *ngFor="let news of listNews">
 							<p>{{news.text}}<a href="{{news.url}}"> Selanjutnya</a></p>

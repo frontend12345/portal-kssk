@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Output,EventEmitter,Inject, Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuService } from '../services/menu.service';
 import { ContentService } from '../services/content.service';
@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { IImage } from 'ng-simple-slideshow';
 import * as $ from 'jquery';// import Jquery here
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-cms',
@@ -62,7 +63,8 @@ export class CmsComponent implements OnInit {
 		private fileService: FileService,
 		private userService: UserService,
 		private newsService: NewsService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+		@Inject(DOCUMENT) private document: any
 	) {
 		this.href = location.pathname;
 	};
@@ -80,7 +82,7 @@ export class CmsComponent implements OnInit {
 		this.openContentByUrl();
 		this.galleryOptions = [
             {
-                width: '600px',
+                width: '730px',
                 height: '400px',
                 thumbnailsColumns: 4,
                 imageAnimation: NgxGalleryAnimation.Slide
