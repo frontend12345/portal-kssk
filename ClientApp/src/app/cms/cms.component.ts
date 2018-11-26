@@ -48,7 +48,7 @@ export class CmsComponent implements OnInit {
 	fileList: FileList;
 	
 	// for gallery
-	sliderUrl: (string | IImage)[] = [{url:'assets/img/slider-new1x.jpg',caption:'', href: '#'},{url:'assets/img/slider-new2x.jpg',caption:'', href: '#'}];
+	sliderUrl: (string | IImage)[] = [{url:'assets/img/slider-new1xx.jpg',caption:'', href: '#'},{url:'assets/img/slider-new2xx.jpg',caption:'', href: '#'}];
 	listSliderFile: (string | IImage)[] = [];
 	captionBackground: string = 'rgba(47, 84, 150, 0.9)';
 	captionColor: string = '#FFF';
