@@ -93,7 +93,7 @@
 						</div>
 						<div *ngIf="selectedMenu.mode=='multiplefilesmall'" class="menu-content pb-70 col-lg-12">
 							<div class="pt-20 table-responseve" >
-								<table class="table table-hover table-sm" [mfData]="listFile" #mf="mfDataTable" [mfRowsOnPage]="30">
+								<table class="table table-hover table-sm" [mfData]="listFile" #mf="mfDataTable" [mfRowsOnPage]="30" style="text-align:left;">
 									<thead class="thead-light">
 									<tr>
 										<th><mfDefaultSorter by="description">Deskripsi</mfDefaultSorter></th>
