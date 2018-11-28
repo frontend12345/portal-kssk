@@ -17,10 +17,10 @@
 	</div>
 	<div class="container main-menu">
 		<div class="row align-items-center justify-content-between d-flex">
-			<div id="logo">
+			<div class="col-lg-3" id="logo">
 				<a href="/"><img src="assets/img/logo.png" alt="" title="" /></a>
 			</div>
-			<nav id="nav-menu-container">
+			<nav class="col-lg-9" id="nav-menu-container">
 				<ul class="nav-menu">
 					<ng-container *ngFor="let itemRoot of menu">
 					<li *ngIf="!hasChildren(menu,itemRoot.id)" id="bs-check-menu">
